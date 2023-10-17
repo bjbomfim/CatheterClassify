@@ -11,10 +11,11 @@ def pre_processing(images):
 
 def save_images(images, path: str):
     print("Saving images")
-    for image in images:
+    for i, image in enumerate(images):
         save_file = f"{path}/{image.name}.jpg"
         cv2.imwrite(save_file, image.image)
-        print(f"Image saved: {image.name}")
+        if i % 1000 == 0:
+            print(f"images saved: {i}")
     print("Images saved completely")
 
 def read_images(path):
@@ -22,8 +23,10 @@ def read_images(path):
     images = []
     ImageTuple = namedtuple("Image", ["name", "image"])
     print("Reading images")
-    for image_name in os.listdir(path):
-        print(f"image: {image_name} ")
+    
+    for i, image_name in enumerate(os.listdir(path)):
+        if i % 1000 == 0:
+            print(f"images read: {i}")
         image_path = os.path.join(path, image_name)
         with Image.open(image_path) as img:
             images.append(ImageTuple(image_name, img))
