@@ -14,19 +14,21 @@ def save_images(images, path: str):
     for image in images:
         save_file = f"{path}/{image.name}.jpg"
         cv2.imwrite(save_file, image.image)
-        print("Image saved: image.name")
-    
+        print(f"Image saved: {image.name}")
+    print("Images saved completely")
 
 def read_images(path):
     
     images = []
-    Image = namedtuple("Image", ["name", "image"])
+    ImageTuple = namedtuple("Image", ["name", "image"])
     print("Reading images")
     for image_name in os.listdir(path):
+        print(f"image: {image_name} ")
         image_path = os.path.join(path, image_name)
         with Image.open(image_path) as img:
-            images.append(Image(image_name, img))
-            print(f"image: {image_name} ")
+            images.append(ImageTuple(image_name, img))
+            
+    print("Images read completely")
     return images
 
 def main():
