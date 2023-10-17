@@ -17,24 +17,24 @@ def save_images(images, path: str):
         if i % 1000 == 0:
             print(f"images saved: {i}")
     print("Images saved completely")
-
-def read_images(path):
     
+def load_images(images_paths, path):
     images = []
     ImageTuple = namedtuple("Image", ["name", "image"])
-    print("Reading images")
-    
-    for i, image_name in enumerate(os.listdir(path)):
-        if i % 1000 == 0:
-            print(f"images read: {i}")
+    for image_name in images_paths:
         image_path = os.path.join(path, image_name)
         image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-        
         if image is not None:
             images.append(ImageTuple(image_name, image))
-            
-    print("Images read completely")
     return images
+
+def read_images(path):
+    print("Reading images")
+    
+    images_names = os.listdir(path)
+
+    print("Images read completely")
+    return images_names
 
 def main():
     
@@ -51,8 +51,11 @@ def main():
     
     print(f"Args received: path: {path} pathToSave: {path_to_save}")
     
-    images = read_images(path)
-    processed_images = pre_processing(images)
-    save_images(processed_images, path_to_save)
+    images_names = read_images(path)
+    
+    for group in range(100, len(images_names), 100):
+        images = load_images(images_names[group-100:group], path)
+        processed_images = pre_processing(images)
+        save_images(processed_images, path_to_save)
 
 main()
