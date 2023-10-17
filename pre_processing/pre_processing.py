@@ -8,8 +8,11 @@ def equalize_histogram(image):
     return equalized_histogram
 
 def equalize_histogram_images(images):
+    
+    Image = namedtuple("Image", ["name", "image"])
+    print("Equalize Histogram")
     equalized_images = []
     for image in images:
-        equalized_images.append(equalize_histogram(image.image))
+        equalized_images.append(Image(image.name, equalize_histogram(image.image)))
         
     return equalized_images

@@ -10,18 +10,23 @@ def pre_processing(images):
     
 
 def save_images(images, path: str):
+    print("Saving images")
     for image in images:
         save_file = f"{path}/{image.name}.jpg"
         cv2.imwrite(save_file, image.image)
+        print("Image saved: image.name")
     
 
 def read_images(path):
+    
     images = []
     Image = namedtuple("Image", ["name", "image"])
+    print("Reading images")
     for image_name in os.listdir(path):
         image_path = os.path.join(path, image_name)
         with Image.open(image_path) as img:
             images.append(Image(image_name, img))
+            print(f"image: {image_name} ")
     return images
 
 def main():
@@ -36,6 +41,8 @@ def main():
     
     path = args.path
     path_to_save = args.pathToSave
+    
+    print(f"Args received: path: {path} pathToSave: {path_to_save}")
     
     images = read_images(path)
     processed_images = pre_processing(images)
