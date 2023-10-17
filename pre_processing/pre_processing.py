@@ -4,6 +4,8 @@ import numpy as np
 
 
 def equalize_histogram(image):
+    if not isinstance(image, np.ndarray):
+        image = np.array(image)
     equalized_histogram = cv2.equalizeHist(image)
     return equalized_histogram
 
