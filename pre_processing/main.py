@@ -6,7 +6,7 @@ import os
 from PIL import Image
 
 def pre_processing(images):
-    pp.equalize_histogram_images(images=images)
+    return pp.equalize_histogram_images(images=images)
     
 
 def save_images(images, path: str):
@@ -28,8 +28,10 @@ def read_images(path):
         if i % 1000 == 0:
             print(f"images read: {i}")
         image_path = os.path.join(path, image_name)
-        with Image.open(image_path) as img:
-            images.append(ImageTuple(image_name, img))
+        image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+        
+        if image is not None:
+            images.append(ImageTuple(image_name, image))
             
     print("Images read completely")
     return images
