@@ -6,7 +6,7 @@ def equalize_histogram(image, tecnic):
         equalized_histogram = cv.equalizeHist(image)
         return equalized_histogram
     else:
-        clahe = cv.createCLAHE(clipLimit=(1,4), tileGridSize=(8, 8))
+        clahe = cv.createCLAHE(clipLimit=1.5, tileGridSize=(4, 4))
         equalized_histogram = clahe.apply(image)
         return equalized_histogram
 
