@@ -58,8 +58,8 @@ def main():
     for group in range(100, 1000, 100):
         print(f"Group: {group}")
         images = load_images(images_names[group-100:group], path)
-        processed_images_equalized = pre_processing(images, 1)
-        save_images(processed_images_equalized, path_to_save_equalized)
+        # processed_images_equalized = pre_processing(images, 1)
+        # save_images(processed_images_equalized, path_to_save_equalized)
         processed_images_CLAHE = pre_processing(images, 2)
         save_images(processed_images_CLAHE, path_to_save_CLAHE)
 
