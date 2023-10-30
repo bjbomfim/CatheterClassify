@@ -4,8 +4,8 @@ import cv2 as cv
 import argparse
 import os
 
-def pre_processing(images):
-    return pp.equalize_histogram_images(images=images)
+def pre_processing(images, tecnic):
+    return pp.equalize_histogram_images(images=images, tecnic=tecnic)
     
 
 def save_images(images, path: str):
