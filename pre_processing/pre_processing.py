@@ -2,12 +2,13 @@ from collections import namedtuple
 import cv2 as cv
 
 def equalize_histogram(image, tecnic):
-    equalized_histogram
     if tecnic == 1 :
         equalized_histogram = cv.equalizeHist(image)
+        return equalized_histogram
     else:
-        equalized_histogram = cv.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-    return equalized_histogram
+        clahe = cv.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        equalized_histogram = clahe.apply(image)
+        return equalized_histogram
 
 def equalize_histogram_images(images, tecnic):
     
