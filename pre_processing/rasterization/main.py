@@ -21,14 +21,14 @@ def getRowsFilteredByLabel(csv, label: Labels):
     return filtered_rows
 
 def maskCreation(points, path, height, width, color_channels):
-    image = np.zeros((height, width, color_channels), dtype=np.uint8)
+    image = np.zeros((height, width), dtype=np.uint8)
     
     for x_y in range(0, len(points)) :
         x1, y1 = points[x_y]
         if x_y + 1 < len(points):
             x2, y2 = points[x_y+1]
-            cv2.line(image, (x1, y1), (x2, y2), (100, 100, 100), 7)
-        cv2.circle(image, (x1, y1), radius=8, color=(100, 100, 100), thickness=-1)
+            cv2.line(image, (x1, y1), (x2, y2), 100, 7)
+        cv2.circle(image, (x1, y1), radius=8, color=100, thickness=-1)
     
     cv2.imwrite(path, image)
 
