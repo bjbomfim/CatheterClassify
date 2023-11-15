@@ -35,8 +35,8 @@ def maskCreation(points, path, height, width, color_channels):
 def rasterization(points: list, path_to_save: str, path: str):
     
     for item in points:
-        image_path = path+item[0]+'.jpg'
-        mask_save_path = path_to_save+item[0]
+        image_path = path+'/'+item[0]+'.jpg'
+        mask_save_path = path_to_save+'/'+item[0]
         image = cv2.imread(image_path)
         if image is not None:
             height, width, color_channels = image.shape
