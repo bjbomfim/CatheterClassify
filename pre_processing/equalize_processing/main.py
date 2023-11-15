@@ -1,11 +1,11 @@
 from collections import namedtuple
-import pre_processing as pp
+import equalize_histogram as eh
 import cv2 as cv
 import argparse
 import os
 
 def pre_processing(images, tecnic):
-    return pp.equalize_histogram_images(images=images, tecnic=tecnic)
+    return eh.equalize_histogram_images(images=images, tecnic=tecnic)
     
 
 def save_images(images, path: str):
@@ -40,7 +40,7 @@ def main():
     
     images = []
     
-    parser = argparse.ArgumentParser(description="Calculate medians of a vector.")
+    parser = argparse.ArgumentParser(description=" Histogram Equalization.")
     parser.add_argument("-path", required=True, type=str)
     parser.add_argument("-pathToSaveFirst", required=True, type=str)
     parser.add_argument("-pathToSaveSecond", required=True, type=str)
@@ -58,8 +58,8 @@ def main():
     for group in range(100, 1000, 100):
         print(f"Group: {group}")
         images = load_images(images_names[group-100:group], path)
-        # processed_images_equalized = pre_processing(images, 1)
-        # save_images(processed_images_equalized, path_to_save_equalized)
+        processed_images_equalized = pre_processing(images, 1)
+        save_images(processed_images_equalized, path_to_save_equalized)
         processed_images_CLAHE = pre_processing(images, 2)
         save_images(processed_images_CLAHE, path_to_save_CLAHE)
 
