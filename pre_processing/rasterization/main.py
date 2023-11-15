@@ -73,7 +73,7 @@ def main():
     
     for index, row in filtered_rows.iterrows():
         points.append((row['StudyInstanceUID'], eval(row['data'])))
-    
+    print(len(points))
     rasterization(points, path_to_save_rasterizarion, path_to_images)
 
 main()
