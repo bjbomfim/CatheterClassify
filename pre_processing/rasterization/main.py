@@ -27,8 +27,8 @@ def maskCreation(points, path, height, width, color_channels):
         x1, y1 = points[x_y]
         if x_y + 1 < len(points):
             x2, y2 = points[x_y+1]
-            cv2.line(image, (x1, y1), (x2, y2), 150, 2)
-        cv2.circle(image, (x1, y1), radius=2, color=150, thickness=-1)
+            cv2.line(image, (x1, y1), (x2, y2), 150, 7)
+        cv2.circle(image, (x1, y1), radius=10, color=150, thickness=-1)
     
     cv2.imwrite(path, image)
 
@@ -74,6 +74,6 @@ def main():
     for index, row in filtered_rows.iterrows():
         points.append((row['StudyInstanceUID'], eval(row['data'])))
     
-    rasterization(points, path_to_save_rasterizarion, path_to_images)
+    rasterization(points[0:5], path_to_save_rasterizarion, path_to_images)
 
 main()
