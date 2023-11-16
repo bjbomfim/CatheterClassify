@@ -21,26 +21,27 @@ def getRowsFilteredByLabel(csv, label: Labels):
     return filtered_rows
 
 def maskCreation(points, path, height, width, color_channels):
-    image = np.zeros((height, width), dtype=np.uint8)
+    image = np.zeros((height, width, color_channels), dtype=np.uint8)
     
     for x_y in range(0, len(points)) :
         x1, y1 = points[x_y]
         if x_y + 1 < len(points):
             x2, y2 = points[x_y+1]
-            cv2.line(image, (x1, y1), (x2, y2), 100, 7)
-        cv2.circle(image, (x1, y1), radius=8, color=100, thickness=-1)
+            cv2.line(image, (x1, y1), (x2, y2), (235, 75, 52), 8)
+        cv2.circle(image, (x1, y1), radius=9, color=(235, 75, 52), thickness=-1)
     
     cv2.imwrite(path, image)
 
-def rasterization(points: list, path_to_save: str, path: str):
+def rasterization(points: list, path_to_save: str, size_image: str):
     
     for item in points:
-        image_path = path+'/'+item[0]+'.jpg'
+        
         mask_save_path = path_to_save+'/'+item[0]+'.jpg'
-        image = cv2.imread(image_path)
+        image = size_image.loc[size_image['StudyInstanceUID']==item[0]]
         if image is not None:
-            height, width, color_channels = image.shape
-            maskCreation(item[1], mask_save_path, height, width, color_channels)
+            height = image[0]['Height']
+            width = image[0]['Width']
+            maskCreation(item[1], mask_save_path, height, width, 3)
     
 
 def main():
@@ -55,7 +56,7 @@ def main():
     
     path = args.path
     path_to_save_rasterizarion = args.pathToSave
-    path_to_images = args.pathImages
+    path_to_images_size = args.pathImages
     type_label = int(args.type)
     
     labels = None
@@ -67,6 +68,7 @@ def main():
         labels = Labels.CVC
     
     reader_csv = pd.read_csv(path)
+    reader_csv_size_images = pd.read_csv(path_to_images_size)
     
     filtered_rows = getRowsFilteredByLabel(reader_csv, labels)
     points = []
@@ -74,6 +76,6 @@ def main():
     for index, row in filtered_rows.iterrows():
         points.append((row['StudyInstanceUID'], eval(row['data'])))
     print(len(points))
-    rasterization(points, path_to_save_rasterizarion, path_to_images)
+    rasterization(points, path_to_save_rasterizarion, reader_csv_size_images)
 
 main()
