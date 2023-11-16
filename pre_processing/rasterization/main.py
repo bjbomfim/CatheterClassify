@@ -40,9 +40,8 @@ def rasterization(points: list, path_to_save: str, size_image: str):
         image = size_image.loc[size_image['StudyInstanceUID']==item[0]]
         print(image)
         if image is not None:
-            height = image['Height'][1]
-            width = image['Width'][1]
-            print(height)
+            height = image['Height'].values[0]
+            width = image['Width'].values[0]
             maskCreation(item[1], mask_save_path, height, width, 3)
     
 
