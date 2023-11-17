@@ -36,14 +36,14 @@ def maskCreation(points, path, height, width):
 
 def rasterization(points: list, path_to_save: str, size_image: str):
     
-    for item in points:
-        mask_save_path = path_to_save+'/'+item[0]+'.jpg'
-        image = size_image.loc[size_image['StudyInstanceUID']==item[0]]
+    for key, item in points.items():
+        mask_save_path = path_to_save+'/'+key+'.jpg'
+        image = size_image.loc[size_image['StudyInstanceUID']==key]
         print(image)
         if image is not None:
             height = image['Height'].values[0]
             width = image['Width'].values[0]
-            maskCreation(item[1], mask_save_path, height, width)
+            maskCreation(item, mask_save_path, height, width)
     
 
 def main():
