@@ -27,6 +27,11 @@ def maskCreation(points, path, height, width, image_exist):
         image = np.zeros((height, width, 3), dtype=np.uint8)
     else:
         image = cv2.imread(path)
+        # Verificar se o arquivo existe
+        if os.path.exists(path):
+            # Excluir o arquivo existente
+            os.remove(path)
+            print("Arquivo existente removido com sucesso!")
     
     for x_y in range(0, len(points)) :
         x1, y1 = points[x_y]
@@ -34,11 +39,6 @@ def maskCreation(points, path, height, width, image_exist):
             x2, y2 = points[x_y+1]
             cv2.line(image, (x1, y1), (x2, y2), (235, 75, 52), 8)
         cv2.circle(image, (x1, y1), radius=9, color=(235, 75, 52), thickness=-1)
-    # Verificar se o arquivo existe
-    if os.path.exists(path):
-        # Excluir o arquivo existente
-        os.remove(path)
-        print("Arquivo existente removido com sucesso!")
     cv2.imwrite(path, image)
 
 def rasterization(points: list, path_to_save: str, size_image: str):
