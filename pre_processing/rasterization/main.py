@@ -20,8 +20,12 @@ def getRowsFilteredByLabel(csv, label: Labels):
     
     return filtered_rows
 
-def maskCreation(points, path, height, width, color_channels):
-    image = np.zeros((height, width, color_channels), dtype=np.uint8)
+def maskCreation(points, path, height, width, image_exist):
+    image = None
+    if image_exist == False:
+        image = np.zeros((height, width, 3), dtype=np.uint8)
+    else:
+        image = cv2.imread(path)
     
     for x_y in range(0, len(points)) :
         x1, y1 = points[x_y]
@@ -34,15 +38,22 @@ def maskCreation(points, path, height, width, color_channels):
 
 def rasterization(points: list, path_to_save: str, size_image: str):
     
+    cache = {}
+    
     for item in points:
-        
         mask_save_path = path_to_save+'/'+item[0]+'.jpg'
         image = size_image.loc[size_image['StudyInstanceUID']==item[0]]
-        print(image)
+        # print(image)
         if image is not None:
             height = image['Height'].values[0]
             width = image['Width'].values[0]
-            maskCreation(item[1], mask_save_path, height, width, 3)
+            if cache.get(item[0]) == None:
+                maskCreation(item[1], mask_save_path, height, width, False)
+                cache[item[0]] = 1
+            else:
+                maskCreation(item[1], mask_save_path, height, width, True)
+                cache[item[0]] += 1
+                print(item[0])
     
 
 def main():
