@@ -82,7 +82,7 @@ def main():
         if study_uid in points:
             points[study_uid].append(data)
         else:
-            points[study_uid] = data
+            points[study_uid] = [data]
     print(len(points))
     rasterization(points, path_to_save_rasterizarion, reader_csv_size_images)
 
