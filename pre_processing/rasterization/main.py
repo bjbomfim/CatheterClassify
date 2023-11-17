@@ -25,7 +25,8 @@ def maskCreation(points, path, height, width):
     
     image = np.zeros((height, width, 3), dtype=np.uint8)
     for point in points:
-        print(f"Gerando para {len(points)}")
+        if len(points) == 2:
+            print(path)
         for x_y in range(0, len(point)) :
             x1, y1 = point[x_y]
             if x_y + 1 < len(point):
@@ -39,7 +40,6 @@ def rasterization(points: list, path_to_save: str, size_image: str):
     for key, item in points.items():
         mask_save_path = path_to_save+'/'+key+'.jpg'
         image = size_image.loc[size_image['StudyInstanceUID']==key]
-        print(len(item))
         if image is not None:
             height = image['Height'].values[0]
             width = image['Width'].values[0]
