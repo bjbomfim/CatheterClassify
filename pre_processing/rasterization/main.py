@@ -25,8 +25,7 @@ def maskCreation(points, path, height, width):
     
     image = np.zeros((height, width, 3), dtype=np.uint8)
     for point in points:
-        if len(points) == 2:
-            print(path)
+        print(path)
         for x_y in range(0, len(point)) :
             x1, y1 = point[x_y]
             if x_y + 1 < len(point):
