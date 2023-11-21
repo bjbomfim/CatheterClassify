@@ -49,7 +49,7 @@ def main():
     
     path = args.path
     path_to_get_image = args.pathToGetImage
-    path_to_save_CLAHE = args.pathToSaveSecond
+    path_to_save_CLAHE = args.pathToSave
     
     print(f"Args received: path: {path} pathToGetImage: {path_to_get_image} pathToSave1: {path_to_save_CLAHE}")
     
