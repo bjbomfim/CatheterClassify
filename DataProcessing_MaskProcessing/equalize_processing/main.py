@@ -55,6 +55,9 @@ def main():
     
     images_names = read_images(path, path_to_save_CLAHE)
     
+    elemento_inicial_do_resto = (len(images_names)//100) * 100
+    elemento_final = elemento_inicial_do_resto+((len(images_names)%100)*100)
+    
     for group in range(100, len(images_names), 100):
         print(f"Group: {group}")
         images = load_images(images_names[group-100:group], path_to_get_image)
@@ -62,6 +65,13 @@ def main():
         # processed_images_equalized = pre_processing(images, 1)
         # save_images(processed_images_equalized, path_to_save_equalized)
         
+        processed_images_CLAHE = pre_processing(images, 2)
+        save_images(processed_images_CLAHE, path_to_save_CLAHE)
+    
+    if len(images_names) % 100 != 0: 
+        print(f"Group: {elemento_final}")
+        images = load_images(images_names[elemento_inicial_do_resto:elemento_final], path_to_get_image)
+
         processed_images_CLAHE = pre_processing(images, 2)
         save_images(processed_images_CLAHE, path_to_save_CLAHE)
 
