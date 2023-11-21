@@ -57,7 +57,7 @@ def main():
     
     elemento_inicial_do_resto = (len(images_names)//100) * 100
     elemento_final = elemento_inicial_do_resto+((len(images_names)%100)*100)
-    
+    print(len(images_names))
     for group in range(100, len(images_names), 100):
         print(f"Group: {group}")
         images = load_images(images_names[group-100:group], path_to_get_image)
