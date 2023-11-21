@@ -56,7 +56,7 @@ def main():
     images_names = read_images(path, path_to_save_CLAHE)
     
     elemento_inicial_do_resto = (len(images_names)//100) * 100
-    elemento_final = elemento_inicial_do_resto+((len(images_names)%100)*100)
+    elemento_final = elemento_inicial_do_resto+(len(images_names)%100)
     print(len(images_names))
     for group in range(100, len(images_names), 100):
         print(f"Group: {group}")
