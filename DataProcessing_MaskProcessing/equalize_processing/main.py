@@ -42,24 +42,26 @@ def main():
     
     parser = argparse.ArgumentParser(description=" Histogram Equalization.")
     parser.add_argument("-path", required=True, type=str)
-    parser.add_argument("-pathToSaveFirst", required=True, type=str)
-    parser.add_argument("-pathToSaveSecond", required=True, type=str)
+    parser.add_argument("-pathToGetImage", required=True, type=str)
+    parser.add_argument("-pathToSave", required=True, type=str)
     
     args = parser.parse_args()
     
     path = args.path
-    path_to_save_equalized = args.pathToSaveFirst
+    path_to_get_image = args.pathToGetImage
     path_to_save_CLAHE = args.pathToSaveSecond
     
-    print(f"Args received: path: {path} pathToSave1: {path_to_save_equalized} pathToSave2: {path_to_save_CLAHE}")
+    print(f"Args received: path: {path} pathToGetImage: {path_to_get_image} pathToSave1: {path_to_save_CLAHE}")
     
-    images_names = read_images(path, path_to_save_equalized)
+    images_names = read_images(path, path_to_save_CLAHE)
     
-    for group in range(100, 1000, 100):
+    for group in range(100, len(images_names), 100):
         print(f"Group: {group}")
-        images = load_images(images_names[group-100:group], path)
-        processed_images_equalized = pre_processing(images, 1)
-        save_images(processed_images_equalized, path_to_save_equalized)
+        images = load_images(images_names[group-100:group], path_to_get_image)
+        ## Nao utilizado como equalizador de histograma principal.
+        # processed_images_equalized = pre_processing(images, 1)
+        # save_images(processed_images_equalized, path_to_save_equalized)
+        
         processed_images_CLAHE = pre_processing(images, 2)
         save_images(processed_images_CLAHE, path_to_save_CLAHE)
 
