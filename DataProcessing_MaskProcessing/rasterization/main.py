@@ -23,15 +23,15 @@ def getRowsFilteredByLabel(csv, label: Labels):
 
 def maskCreation(points, path, height, width):
     
-    image = np.zeros((height, width, 3), dtype=np.uint8)
+    image = np.zeros((height, width, 1), dtype=np.uint8)
     for point in points:
         print(path)
         for x_y in range(0, len(point)) :
             x1, y1 = point[x_y]
             if x_y + 1 < len(point):
                 x2, y2 = point[x_y+1]
-                cv2.line(image, (x1, y1), (x2, y2), (235, 75, 52), 8)
-            cv2.circle(image, (x1, y1), radius=9, color=(235, 75, 52), thickness=-1)
+                cv2.line(image, (x1, y1), (x2, y2), 255, 8)
+            cv2.circle(image, (x1, y1), radius=9, color=255, thickness=-1)
     cv2.imwrite(path, image)
 
 def rasterization(points: list, path_to_save: str, size_image: str):
