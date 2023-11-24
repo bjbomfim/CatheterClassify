@@ -2,7 +2,7 @@
 import os
 from dotenv import load_dotenv
 
-import segmentatio_models as sm 
+import segmentation_models as sm
 import tensorflow as tf
 
 import data_generator as generator
