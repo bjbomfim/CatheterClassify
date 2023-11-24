@@ -1,4 +1,3 @@
 
-pip install -U albumentations>=0.3.0 --user 
-pip install -U --pre segmentation-models --user
+pip install -U segmentation-models
 pip install python-dotenv
