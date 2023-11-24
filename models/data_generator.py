@@ -2,7 +2,6 @@ import os
 
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
 
 from tensorflow.keras.utils import Sequence
 
@@ -45,6 +44,6 @@ class DataGenerator(Sequence):
             
             X.append(img)
             Y.append(mask)
-        plt.imshow(X[0])
+
         return np.array(X), np.array(Y)
 
