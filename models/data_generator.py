@@ -45,6 +45,6 @@ class DataGenerator(Sequence):
             
             X.append(img)
             Y.append(mask)
-        X[0].imshow()
+        plt.imshow(X[0])
         return np.array(X), np.array(Y)
 
