@@ -33,9 +33,7 @@ class DataGenerator(Sequence):
         for idx in indexes:
             # Load image
             img = cv2.imread(os.path.join(self.image_path, idx))
-            if img == None:
-                print(idx)
-            else:
+            if img is not None or img.size != 0:
                 img = self.resize_image(img)
                 img = self.normalize_image(img)
                 
@@ -46,6 +44,8 @@ class DataGenerator(Sequence):
                 
                 X.append(img)
                 Y.append(mask)
+            else:
+                print(f"Erro ao carregar a imagem: {idx}")
 
         return np.array(X), np.array(Y)
 
