@@ -31,7 +31,7 @@ class DataGenerator(Sequence):
         Y = []
         
         for idx in indexes:
-            
+            print(idx)
             # Load image
             img = cv2.imread(os.path.join(self.image_path, idx))
             img = self.resize_image(img)
