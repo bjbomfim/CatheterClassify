@@ -31,19 +31,21 @@ class DataGenerator(Sequence):
         Y = []
         
         for idx in indexes:
-            print(idx)
             # Load image
             img = cv2.imread(os.path.join(self.image_path, idx))
-            img = self.resize_image(img)
-            img = self.normalize_image(img)
-            
-            # Load Mask
-            mask = cv2.imread(os.path.join(self.mask_path, idx))
-            mask = self.resize_image(mask)
-            mask = self.normalize_image(mask)
-            
-            X.append(img)
-            Y.append(mask)
+            if img == None:
+                print(idx)
+            else:
+                img = self.resize_image(img)
+                img = self.normalize_image(img)
+                
+                # Load Mask
+                mask = cv2.imread(os.path.join(self.mask_path, idx))
+                mask = self.resize_image(mask)
+                mask = self.normalize_image(mask)
+                
+                X.append(img)
+                Y.append(mask)
 
         return np.array(X), np.array(Y)
 
