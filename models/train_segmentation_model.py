@@ -31,11 +31,11 @@ def main():
     val_ids = ids[train_samples:]
 
     # Hiperparametros
-    batch_size = 8
-    image_size = (720, 720)
+    batch_size = 4
+    image_size = (384, 384)
 
     # Criando o DataGenerator para os dados de treino
-    train_generator = generator(
+    train_generator = generator.DataGenerator(
         train_ids,
         train_images_path,
         masks_path,
@@ -43,7 +43,7 @@ def main():
         image_size=image_size
     )
 
-    val_generator = generator(
+    val_generator = generator.DataGenerator(
         val_ids,
         train_images_path,
         masks_path,
@@ -55,8 +55,8 @@ def main():
     model = sm.Unet(backbone, classes=1, activation='sigmoid')
     model.compile(
         'Adam',
-        loss=sm.losses.binary_crossentropy,
-        metrics=[sm.metrics.f1_score],
+        loss=sm.losses.dice_loss,
+        metrics=[sm.metrics.iou_score, sm.metrics.f1_score, sm.metrics.precision , sm.metrics.recall],
     )
 
     model.fit(
