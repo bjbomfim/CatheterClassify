@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import segmentation_models as sm
 import tensorflow as tf
 
-import data_generator as generator
+from .models import data_generator as generator
 import random
 
 def main():
