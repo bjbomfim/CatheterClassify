@@ -58,7 +58,9 @@ def main():
         loss=sm.losses.dice_loss,
         metrics=[sm.metrics.iou_score, sm.metrics.f1_score, sm.metrics.precision , sm.metrics.recall],
     )
-
+    
+    print(f"Steps per epoch {len(train_generator)}")
+    
     model.fit(
         train_generator,
         steps_per_epoch=len(train_generator),

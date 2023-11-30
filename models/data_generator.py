@@ -33,7 +33,7 @@ class DataGenerator(Sequence):
         for idx in indexes:
             # Load image
             img = cv2.imread(os.path.join(self.image_path, idx))
-            if img is not None or img.size != 0:
+            if img is not None:
                 img = self.resize_image(img)
                 img = self.normalize_image(img)
                 
