@@ -62,7 +62,7 @@ def main():
     
     model.fit(
         train_generator,
-        steps_per_epoch=200,
+        steps_per_epoch=len(train_generator),
         epochs=5,
         validation_data=val_generator,
         validation_steps=len(val_generator),
