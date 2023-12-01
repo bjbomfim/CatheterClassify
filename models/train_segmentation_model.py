@@ -31,7 +31,7 @@ def main():
 
     # Hiperparametros
     batch_size = 4
-    image_size = (256, 256)
+    image_size = (384, 384)
 
     # Criando o DataGenerator para os dados de treino
     train_generator = generator.DataGenerator(
