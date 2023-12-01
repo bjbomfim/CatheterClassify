@@ -6,7 +6,7 @@ import cv2
 from tensorflow.keras.utils import Sequence
 
 class DataGenerator(Sequence):
-    def __init__(self, list_IDs, image_path, mask_path, batch_size=32, image_size=(720, 720)):
+    def __init__(self, list_IDs, image_path, mask_path, batch_size=4, image_size=(384, 384)):
         self.list_IDs = list_IDs
         self.image_path = image_path
         self.mask_path = mask_path

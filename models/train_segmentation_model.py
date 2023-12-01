@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv
 
 import segmentation_models as sm
-import tensorflow as tf
 
 from . import data_generator as generator
 import random
@@ -32,7 +31,7 @@ def main():
 
     # Hiperparametros
     batch_size = 4
-    image_size = (384, 384)
+    image_size = (256, 256)
 
     # Criando o DataGenerator para os dados de treino
     train_generator = generator.DataGenerator(
@@ -63,7 +62,7 @@ def main():
     
     model.fit(
         train_generator,
-        steps_per_epoch=len(train_generator),
+        steps_per_epoch=200,
         epochs=5,
         validation_data=val_generator,
         validation_steps=len(val_generator),
