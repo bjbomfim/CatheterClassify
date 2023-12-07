@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 
 import segmentation_models as sm
+from tensorflow import keras
 
 from . import data_generator as generator
 import random
@@ -50,6 +51,10 @@ def main():
         image_size=image_size
     )
 
+    callbacks = [
+        keras.callbacks.ModelCheckpoint("oxford_segmentation.keras", save_best_only=True)
+    ]
+    
     # Modelo
     model = sm.Unet(backbone, classes=1, activation='sigmoid')
     model.compile(
@@ -66,6 +71,7 @@ def main():
         epochs=5,
         validation_data=val_generator,
         validation_steps=len(val_generator),
+        callbacks=callbacks,
         shuffle=True,
         verbose=1)
 
