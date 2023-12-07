@@ -3,7 +3,8 @@ import os
 from dotenv import load_dotenv
 
 import segmentation_models as sm
-from tensorflow import keras
+from tensorflow.keras.callbacks import TensorBoard
+import datetime
 
 from . import data_generator as generator
 import random
@@ -17,6 +18,7 @@ def main():
     # Caminhos para os dados de treino
     train_images_path = os.getenv("PREPROCESSED_DATA_PATH")
     masks_path = os.getenv("MASKS_PATH")
+    epochs = os.getenv("EPOCHS")
     
     ids = os.listdir(masks_path)
     
@@ -51,9 +53,9 @@ def main():
         image_size=image_size
     )
 
-    callbacks = [
-        keras.callbacks.ModelCheckpoint("oxford_segmentation.keras", save_best_only=True)
-    ]
+    log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    tensorboard_callback = TensorBoard(log_dir=log_dir, histogram_freq=1)
+
     
     # Modelo
     model = sm.Unet(backbone, classes=1, activation='sigmoid')
@@ -68,10 +70,10 @@ def main():
     model.fit(
         train_generator,
         steps_per_epoch=len(train_generator),
-        epochs=5,
+        epochs=int(epochs),
         validation_data=val_generator,
         validation_steps=len(val_generator),
-        callbacks=callbacks,
+        callbacks=tensorboard_callback,
         shuffle=True,
         verbose=1)
 
