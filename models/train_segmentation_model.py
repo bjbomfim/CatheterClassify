@@ -35,12 +35,16 @@ def main():
     # Hiperparametros
     batch_size = 4
     image_size = (384, 384)
+    
+    # Criando Modelo
+    model = sm.Unet(backbone, classes=1, activation='sigmoid')
 
     # Criando o DataGenerator para os dados de treino
     train_generator = generator.DataGenerator(
         train_ids,
         train_images_path,
         masks_path,
+        model,
         batch_size=batch_size,
         image_size=image_size
     )
@@ -58,7 +62,7 @@ def main():
 
     
     # Modelo
-    model = sm.Unet(backbone, classes=1, activation='sigmoid')
+    
     model.compile(
         'Adam',
         loss=sm.losses.dice_loss,

@@ -12,6 +12,7 @@ class DataGenerator(Sequence):
                 list_IDs,
                 image_path,
                 mask_path,
+                model,
                 batch_size=4,
                 image_size=(384, 384),
                 shuffle=True):
@@ -19,6 +20,7 @@ class DataGenerator(Sequence):
         self.list_IDs = list_IDs
         self.image_path = image_path
         self.mask_path = mask_path
+        self.model = model
         self.batch_size = batch_size
         self.image_size = image_size
         self.shuffle = shuffle
