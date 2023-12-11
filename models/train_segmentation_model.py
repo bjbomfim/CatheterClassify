@@ -53,6 +53,7 @@ def main():
         val_ids,
         train_images_path,
         masks_path,
+        model,
         batch_size=batch_size,
         image_size=image_size
     )
