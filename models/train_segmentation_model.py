@@ -79,7 +79,6 @@ def main():
         validation_data=val_generator,
         validation_steps=10,#len(val_generator),
         callbacks=tensorboard_callback,
-        shuffle=True,
         verbose=1)
 
 
