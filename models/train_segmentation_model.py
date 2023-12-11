@@ -69,12 +69,11 @@ def main():
     
     model.fit(
         train_generator,
-        steps_per_epoch=len(train_generator),
+        steps_per_epoch=10,#len(train_generator),
         epochs=int(epochs),
         validation_data=val_generator,
-        validation_steps=len(val_generator),
+        validation_steps=10,#len(val_generator),
         callbacks=tensorboard_callback,
-        shuffle=True,
         verbose=1)
 
 

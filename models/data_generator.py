@@ -22,6 +22,7 @@ class DataGenerator(Sequence):
         self.batch_size = batch_size
         self.image_size = image_size
         self.shuffle = shuffle
+        self.indexes = list_IDs.copy()
     
     def __len__(self):
         return int(np.ceil(len(self.list_IDs) / self.batch_size))
@@ -34,7 +35,7 @@ class DataGenerator(Sequence):
         img = img / 255.0
         return img
     
-    def on_epoch_end(self, epoch=0, logs=None):
+    def on_epoch_end(self):
         
         # Mostrando a prediçao do modelo
         sample_idx = self.list_IDs[0]
@@ -67,10 +68,10 @@ class DataGenerator(Sequence):
         
         # Shuffle
         if self.shuffle:
-            self.list_IDs = sample(self.list_IDs, len(self.list_IDs))
+            self.indexes = sample(self.indexes, len(self.indexes))
 
     def __getitem__(self, index):
-        indexes = self.list_IDs[index*self.batch_size : (index + 1)*self.batch_size]
+        indexes = self.indexes[index*self.batch_size : (index + 1)*self.batch_size]
         
         X = []
         Y = []
