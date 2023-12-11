@@ -35,7 +35,7 @@ class DataGenerator(Sequence):
         img = img / 255.0
         return img
     
-    def on_epoch_end(self, epoch, logs=None):
+    def on_epoch_end(self):
         
         # Mostrando a prediçao do modelo
         sample_idx = self.list_IDs[0]
@@ -65,9 +65,6 @@ class DataGenerator(Sequence):
         plt.imshow(predicted_mask[0], cmap='gray')
         plt.title('Predicted Mask')
         plt.show()
-        
-        if logs is not None:
-            print(f"End of epoch {epoch}. Logs: {logs}")
         
         # Shuffle
         if self.shuffle:
