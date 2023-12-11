@@ -26,6 +26,7 @@ class DataGenerator(Sequence):
         self.shuffle = shuffle
         self.indexes = list_IDs.copy()
         self.output_path = output_path
+        self.num_epoch = 1
     
     def __len__(self):
         return int(np.ceil(len(self.list_IDs) / self.batch_size))
@@ -55,8 +56,8 @@ class DataGenerator(Sequence):
 
         predicted_mask = self.model.predict(sample_image)
 
-        cv2.imwrite(os.path.join(self.output_path, self.list_IDs[0]), predicted_mask[0] * 255)
-        
+        cv2.imwrite(os.path.join(self.output_path, str(self.num_epoch), self.list_IDs[0]), predicted_mask[0] * 255)
+        self.num_epoch += 1
         # Shuffle
         if self.shuffle:
             self.indexes = sample(self.indexes, len(self.indexes))
