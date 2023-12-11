@@ -2,7 +2,6 @@ import os
 
 import numpy as np
 import cv2
-import matplotlib as plt
 from random import sample
 
 from tensorflow.keras.utils import Sequence
@@ -15,7 +14,8 @@ class DataGenerator(Sequence):
                 model,
                 batch_size=4,
                 image_size=(384, 384),
-                shuffle=True):
+                shuffle=True,
+                output_path="/content/output"):
         
         self.list_IDs = list_IDs
         self.image_path = image_path
@@ -25,6 +25,7 @@ class DataGenerator(Sequence):
         self.image_size = image_size
         self.shuffle = shuffle
         self.indexes = list_IDs.copy()
+        self.output_path = output_path
     
     def __len__(self):
         return int(np.ceil(len(self.list_IDs) / self.batch_size))
@@ -54,19 +55,7 @@ class DataGenerator(Sequence):
 
         predicted_mask = self.model.predict(sample_image)
 
-        plt.figure(figsize=(10, 5))
-        plt.subplot(1, 3, 1)
-        plt.imshow(sample_image[0])
-        plt.title('Input Image')
-        
-        plt.subplot(1, 3, 2)
-        plt.imshow(sample_mask[0], cmap='gray')
-        plt.title('True Mask')
-
-        plt.subplot(1, 3, 3)
-        plt.imshow(predicted_mask[0], cmap='gray')
-        plt.title('Predicted Mask')
-        plt.show()
+        cv2.imwrite(os.path.join(self.output_path, self.list_IDs[0]), predicted_mask[0] * 255)
         
         # Shuffle
         if self.shuffle:
