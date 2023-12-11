@@ -3,16 +3,25 @@ import os
 import numpy as np
 import cv2
 import matplotlib as plt
+from random import sample
 
 from tensorflow.keras.utils import Sequence
 
 class DataGenerator(Sequence):
-    def __init__(self, list_IDs, image_path, mask_path, batch_size=4, image_size=(384, 384)):
+    def __init__(self,
+                list_IDs,
+                image_path,
+                mask_path,
+                batch_size=4,
+                image_size=(384, 384),
+                shuffle=True):
+        
         self.list_IDs = list_IDs
         self.image_path = image_path
         self.mask_path = mask_path
         self.batch_size = batch_size
         self.image_size = image_size
+        self.shuffle = shuffle
     
     def __len__(self):
         return int(np.ceil(len(self.list_IDs) / self.batch_size))
@@ -25,8 +34,10 @@ class DataGenerator(Sequence):
         img = img / 255.0
         return img
     
-    def on_epoch_end(self, epoch, logs=None):
-        sample_idx = self.list_IDs[0]  # Usando o primeiro índice como exemplo
+    def on_epoch_end(self, epoch=0, logs=None):
+        
+        # Mostrando a prediçao do modelo
+        sample_idx = self.list_IDs[0]
         sample_image = cv2.imread(os.path.join(self.image_path, sample_idx))
         sample_mask = cv2.imread(os.path.join(self.mask_path, sample_idx))
 
@@ -53,6 +64,10 @@ class DataGenerator(Sequence):
         plt.imshow(predicted_mask[0], cmap='gray')
         plt.title('Predicted Mask')
         plt.show()
+        
+        # Shuffle
+        if self.shuffle:
+            self.list_IDs = sample(self.list_IDs, len(self.list_IDs))
 
     def __getitem__(self, index):
         indexes = self.list_IDs[index*self.batch_size : (index + 1)*self.batch_size]
