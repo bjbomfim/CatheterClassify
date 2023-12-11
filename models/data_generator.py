@@ -2,6 +2,7 @@ import os
 
 import numpy as np
 import cv2
+import matplotlib as plt
 
 from tensorflow.keras.utils import Sequence
 
@@ -23,6 +24,35 @@ class DataGenerator(Sequence):
     def normalize_image(self, img):
         img = img / 255.0
         return img
+    
+    def on_epoch_end(self, epoch, logs=None):
+        sample_idx = self.list_IDs[0]  # Usando o primeiro índice como exemplo
+        sample_image = cv2.imread(os.path.join(self.image_path, sample_idx))
+        sample_mask = cv2.imread(os.path.join(self.mask_path, sample_idx))
+
+        sample_image = self.resize_image(sample_image)
+        sample_image = self.normalize_image(sample_image)
+        sample_mask = self.resize_image(sample_mask)
+        sample_mask = self.normalize_image(sample_mask)
+
+        sample_image = np.expand_dims(sample_image, axis=0)
+        sample_mask = np.expand_dims(sample_mask, axis=0)
+
+        predicted_mask = self.model.predict(sample_image)
+
+        plt.figure(figsize=(10, 5))
+        plt.subplot(1, 3, 1)
+        plt.imshow(sample_image[0])
+        plt.title('Input Image')
+        
+        plt.subplot(1, 3, 2)
+        plt.imshow(sample_mask[0], cmap='gray')
+        plt.title('True Mask')
+
+        plt.subplot(1, 3, 3)
+        plt.imshow(predicted_mask[0], cmap='gray')
+        plt.title('Predicted Mask')
+        plt.show()
 
     def __getitem__(self, index):
         indexes = self.list_IDs[index*self.batch_size : (index + 1)*self.batch_size]
