@@ -41,23 +41,27 @@ class DataGenerator(Sequence):
     
     def on_epoch_end(self):
         
-        # Mostrando a prediçao do modelo
-        sample_idx = self.list_IDs[0]
-        sample_image = cv2.imread(os.path.join(self.image_path, sample_idx))
-        sample_mask = cv2.imread(os.path.join(self.mask_path, sample_idx))
+        
+        # Salvando a prediçao do modelo a cada 5 epocas
+        if self.num_epoch % 5 == 0:
+            sample_idx = self.list_IDs[0]
+            sample_image = cv2.imread(os.path.join(self.image_path, sample_idx))
+            sample_mask = cv2.imread(os.path.join(self.mask_path, sample_idx))
 
-        sample_image = self.resize_image(sample_image)
-        sample_image = self.normalize_image(sample_image)
-        sample_mask = self.resize_image(sample_mask)
-        sample_mask = self.normalize_image(sample_mask)
+            sample_image = self.resize_image(sample_image)
+            sample_image = self.normalize_image(sample_image)
+            sample_mask = self.resize_image(sample_mask)
+            sample_mask = self.normalize_image(sample_mask)
 
-        sample_image = np.expand_dims(sample_image, axis=0)
-        sample_mask = np.expand_dims(sample_mask, axis=0)
+            sample_image = np.expand_dims(sample_image, axis=0)
+            sample_mask = np.expand_dims(sample_mask, axis=0)
 
-        predicted_mask = self.model.predict(sample_image)
+            predicted_mask = self.model.predict(sample_image)
 
-        cv2.imwrite(os.path.join(self.output_path, str(self.num_epoch), self.list_IDs[0]), predicted_mask[0] * 255)
+            cv2.imwrite(os.path.join(self.output_path, str(self.num_epoch), self.list_IDs[0]), predicted_mask[0] * 255)
+        
         self.num_epoch += 1
+        
         # Shuffle
         if self.shuffle:
             self.indexes = sample(self.indexes, len(self.indexes))
