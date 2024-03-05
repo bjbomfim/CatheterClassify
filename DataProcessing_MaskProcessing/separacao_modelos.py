@@ -7,10 +7,11 @@ def generate_csv(path, map_csv):
     with open(path, 'w', newline='') as folder_csv:
         write_csv = csv.writer(folder_csv)
 
-        write_csv.writerow(['ID', 'labels'])
-
+        write_csv.writerow(['ID', 'labels', 'Path_Arquivo', 'Path_Mask'])
+        path_arquivo = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train/"
+        path_mask = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/"
         for k, v in map_csv.items():
-            write_csv.writerow([k, v])
+            write_csv.writerow([k, v, path_arquivo+k+".jpg", path_mask+k+".jpg"])
 
 
 tube_position1 = 'CVC - Normal'
