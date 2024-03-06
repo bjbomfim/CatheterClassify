@@ -20,7 +20,7 @@ class DataGenerator(Sequence):
         self.batch_size = batch_size
         self.image_size = image_size
         self.shuffle = shuffle
-        self.indexes = list_IDs.copy()
+        self.indexes = list_IDs
         self.output_path = output_path
         self.num_epoch = 1
     
