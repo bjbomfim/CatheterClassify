@@ -25,10 +25,16 @@ def main():
     val_ids = []
 
     with open(train_csv_path,'r') as folder_csv:
-        train_ids = csv.reader(folder_csv)
+        read_csv = csv.reader(folder_csv)
+        
+        for line in read_csv:
+            train_ids.append(line)
     
     with open(val_csv_path,'r') as folder_csv:
-        val_ids = csv.reader(folder_csv)
+        read_csv = csv.reader(folder_csv)
+        
+        for line in read_csv:
+            val_ids.append(line)
     
     # Hiperparametros
     batch_size = os.getenv("BATCH_SIZE")
