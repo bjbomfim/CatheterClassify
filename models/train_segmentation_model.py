@@ -37,8 +37,8 @@ def main():
             val_ids.append(line)
     
     # Hiperparametros
-    batch_size = os.getenv("BATCH_SIZE")
-    image_size = (os.getenv("IMAGE_SIZE"), os.getenv("IMAGE_SIZE"))
+    batch_size = int(os.getenv("BATCH_SIZE"))
+    image_size = (int(os.getenv("IMAGE_SIZE")), int(os.getenv("IMAGE_SIZE")))
     
     # Criando Modelo
     model = sm.Unet(backbone, classes=1, activation='sigmoid')
