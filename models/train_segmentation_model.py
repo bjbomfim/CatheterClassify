@@ -1,6 +1,7 @@
 
 import os
 from dotenv import load_dotenv
+import csv
 
 import segmentation_models as sm
 from tensorflow.keras.callbacks import TensorBoard
@@ -16,25 +17,22 @@ def main():
     backbone = os.getenv("BACKBONE")
 
     # Caminhos para os dados de treino
-    train_images_path = os.getenv("PREPROCESSED_DATA_PATH")
-    masks_path = os.getenv("MASKS_PATH")
+    train_csv_path = os.getenv("TRAIN_CSV_PATH")
+    val_csv_path = os.getenv("TEST_CSV_PATH")
     epochs = os.getenv("EPOCHS")
     
-    ids = os.listdir(masks_path)
-    
-    random.shuffle(ids)
+    train_ids = []
+    val_ids = []
 
-    train_ratio = 0.8
-    total_samples = len(ids)
-    train_samples = int(train_ratio * total_samples)
+    with open(train_csv_path,'r') as folder_csv:
+        train_ids = csv.reader(folder_csv)
     
-    # Separando os dados de treino e os dados de validaçao
-    train_ids = ids[:train_samples]
-    val_ids = ids[train_samples:]
-
+    with open(val_csv_path,'r') as folder_csv:
+        val_ids = csv.reader(folder_csv)
+    
     # Hiperparametros
-    batch_size = 4
-    image_size = (384, 384)
+    batch_size = int(os.getenv("BATCH_SIZE"))
+    image_size = (int(os.getenv("IMAGE_SIZE")), int(os.getenv("IMAGE_SIZE")))
     
     # Criando Modelo
     model = sm.Unet(backbone, classes=1, activation='sigmoid')
@@ -42,8 +40,6 @@ def main():
     # Criando o DataGenerator para os dados de treino
     train_generator = generator.DataGenerator(
         train_ids,
-        train_images_path,
-        masks_path,
         model,
         batch_size=batch_size,
         image_size=image_size
@@ -51,8 +47,6 @@ def main():
 
     val_generator = generator.DataGenerator(
         val_ids,
-        train_images_path,
-        masks_path,
         model,
         batch_size=batch_size,
         image_size=image_size

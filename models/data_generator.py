@@ -9,8 +9,6 @@ from tensorflow.keras.utils import Sequence
 class DataGenerator(Sequence):
     def __init__(self,
                 list_IDs,
-                image_path,
-                mask_path,
                 model,
                 batch_size=4,
                 image_size=(384, 384),
@@ -18,8 +16,6 @@ class DataGenerator(Sequence):
                 output_path="/content/output"):
         
         self.list_IDs = list_IDs
-        self.image_path = image_path
-        self.mask_path = mask_path
         self.model = model
         self.batch_size = batch_size
         self.image_size = image_size
@@ -74,13 +70,13 @@ class DataGenerator(Sequence):
         
         for idx in indexes:
             # Load image
-            img = cv2.imread(os.path.join(self.image_path, idx))
+            img = cv2.imread(idx[2])
             if img is not None:
                 img = self.resize_image(img)
                 img = self.normalize_image(img)
                 
                 # Load Mask
-                mask = cv2.imread(os.path.join(self.mask_path, idx))
+                mask = cv2.imread(idx[3])
                 mask = self.resize_image(mask)
                 mask = self.normalize_image(mask)
                 
