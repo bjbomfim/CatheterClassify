@@ -27,14 +27,14 @@ def main():
     with open(train_csv_path,'r') as folder_csv:
         read_csv = csv.reader(folder_csv)
         
-        for line in read_csv:
-            train_ids.append(line)
+        for i in range(1, len(read_csv)):
+            train_ids.append(i)
     
     with open(val_csv_path,'r') as folder_csv:
         read_csv = csv.reader(folder_csv)
         
-        for line in read_csv:
-            val_ids.append(line)
+        for i in range(1, len(read_csv)):
+            val_ids.append(i)
     
     # Hiperparametros
     batch_size = int(os.getenv("BATCH_SIZE"))

@@ -9,7 +9,7 @@ def generate_csv(path, map_csv):
 
         write_csv.writerow(['ID', 'labels', 'Path_Arquivo', 'Path_Mask'])
         path_arquivo = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train/"
-        path_mask = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/"
+        path_mask = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC/"
         for k, v in map_csv.items():
             write_csv.writerow([k, v, path_arquivo+k+".jpg", path_mask+k+".jpg"])
 
