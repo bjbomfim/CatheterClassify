@@ -1,21 +1,25 @@
 import os
+from datetime import datetime
+import csv
 
 import segmentation_models as sm
 from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, CSVLogger, ModelCheckpoint, ReduceLROnPlateau
-from datetime import datetime
+from tensorflow.keras.models import load_model
 
 from . import data_generator as generator
 
 
-def train(train_ids, val_ids):
+def train(train_ids, val_ids, return_train_path = None):
     
     
     sm.setfra_framework('tf.keras')
     sm.framework()
     
     # criation log_folder 
-    results_dir = os.environ["RESULT_TRAIN_PATH"]+datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%p")
-    
+    current_time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%p")
+    results_dir = os.environ["RESULT_TRAIN_PATH"]+current_time
+    if not os.path.exists(results_dir):
+        os.makedirs(results_dir)
     
     # Hiperparametros
     backbone = os.environ["BACKBONE"]
@@ -26,6 +30,17 @@ def train(train_ids, val_ids):
     # Criando Modelo
     model = sm.Unet(backbone, classes=1, activation='sigmoid')
 
+
+    # Verificando se irá retomar o treinamento
+    previous_epoch_number = 0
+    if return_train_path is not None:
+        with open(os.path.join(return_train_path, 'training_log.csv'), 'r') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            for row in csv_reader:
+                last_epoch = int(row['epoch'])
+        previous_epoch_number = last_epoch
+        model.load_weights(os.path.join(return_train_path), "best_segmentation_model.h5")
+    
     model.compile(
         'Adam',
         loss=sm.losses.dice_loss,
@@ -54,7 +69,7 @@ def train(train_ids, val_ids):
     early_stopping = EarlyStopping(monitor='val_loss', patience=20, restore_best_weights=True)
     csv_logger = CSVLogger(os.path.join(results_dir, 'training_log.csv'))
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=1e-6)
-    model_checkpoint = ModelCheckpoint(os.path.join(results_dir, 'best_model.h5'), 
+    model_checkpoint = ModelCheckpoint(os.path.join(results_dir, 'best_segmentation_model.h5'), 
                                     monitor='val_loss',
                                     save_weights_only=True,
                                     save_best_only=True)
@@ -73,4 +88,13 @@ def train(train_ids, val_ids):
         validation_steps=len(val_generator),
         callbacks=callbacks_list,
         shuffle=True,
-        verbose=1)
+        verbose=1,
+        initial_epoch=previous_epoch_number)
+    
+    # Salvando no drive
+    results_dir_drive = os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults", current_time)
+    os.makedirs(results_dir_drive, exist_ok=True)  
+    for filename in os.listdir(results_dir):
+        src = os.path.join(results_dir, filename)
+        dst = os.path.join(results_dir_drive, filename)
+        os.rename(src, dst)
