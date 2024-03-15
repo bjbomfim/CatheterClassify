@@ -71,15 +71,16 @@ class DataGenerator(Sequence):
         for idx in indexes:
             # Load image
             img = cv2.imread(idx[2])
-            if img is not None:
+            mask = cv2.imread(idx[3])
+            if img is not None and mask is not None :
                 img = self.resize_image(img)
                 img = self.normalize_image(img)
                 
                 # Load Mask
-                mask = cv2.imread(idx[3])
+                
                 mask = self.resize_image(mask)
                 mask = self.normalize_image(mask)
-                
+        
                 X.append(img)
                 Y.append(mask)
             else:
