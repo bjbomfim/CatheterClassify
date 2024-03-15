@@ -51,15 +51,13 @@ def train(train_ids, val_ids, return_train_path = None):
     train_generator = generator.DataGenerator(
         train_ids,
         model,
-        batch_size=batch_size,
-        image_size=image_size
+        batch_size=batch_size
     )
     
     val_generator = generator.DataGenerator(
         val_ids,
         model,
-        batch_size=batch_size,
-        image_size=image_size
+        batch_size=batch_size
     )
     
     
