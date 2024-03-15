@@ -51,20 +51,22 @@ def train(train_ids, val_ids, return_train_path = None):
     train_generator = generator.DataGenerator(
         train_ids,
         model,
-        batch_size=batch_size
+        batch_size=batch_size,
+        image_size=image_size
     )
     
     val_generator = generator.DataGenerator(
         val_ids,
         model,
-        batch_size=batch_size
+        batch_size=batch_size,
+        image_size=image_size
     )
     
     
     # Callbacks
     
     tensorboard = TensorBoard(log_dir=os.path.join(results_dir, "tensorboard_log"), histogram_freq=1)
-    early_stopping = EarlyStopping(monitor='val_loss', patience=20, restore_best_weights=True)
+    early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
     csv_logger = CSVLogger(os.path.join(results_dir, 'training_log.csv'))
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=5, min_lr=1e-6)
     model_checkpoint = ModelCheckpoint(os.path.join(results_dir, 'best_segmentation_model.h5'), 
