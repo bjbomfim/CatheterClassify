@@ -12,7 +12,7 @@ from . import data_generator as generator
 def train(train_ids, val_ids, return_train_path = None):
     
     
-    sm.setfra_framework('tf.keras')
+    sm.set_framework('tf.keras')
     sm.framework()
     
     # criation log_folder 
