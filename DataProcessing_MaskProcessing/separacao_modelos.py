@@ -13,7 +13,8 @@ def generate_csv(path, map_csv):
         for k, v in map_csv.items():
             if v == 'Sem - Tubo':
                 write_csv.writerow([k, v, path_arquivo+k+".jpg", path_mask+"semtubo.jpg"])
-            write_csv.writerow([k, v, path_arquivo+k+".jpg", path_mask+k+".jpg"])
+            else:
+                write_csv.writerow([k, v, path_arquivo+k+".jpg", path_mask+k+".jpg"])
 
 
 tube_position1 = 'CVC - Normal'
