@@ -8,8 +8,8 @@ def generate_csv(path, map_csv):
         write_csv = csv.writer(folder_csv)
 
         write_csv.writerow(['ID', 'labels', 'Path_Arquivo', 'Path_Mask'])
-        path_arquivo =  "/content/train_imagens/" #"/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train/"
-        path_mask = "/content/mask_imagens/" #"/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC/" 
+        path_arquivo = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train/" # "/content/train_imagens/" #
+        path_mask = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC/"  #"/content/mask_imagens/" #
         for k, v in map_csv.items():
             if v == 'Sem - Tubo':
                 write_csv.writerow([k, v, path_arquivo+k+".jpg", path_mask+"semtubo.jpg"])
