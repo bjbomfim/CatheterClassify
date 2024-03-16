@@ -11,7 +11,7 @@ def generate_csv(path, map_csv):
         path_arquivo = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train/" # "/content/train_imagens/" #
         path_mask = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC/"  #"/content/mask_imagens/" #
         for k, v in map_csv.items():
-            if v == 'Sem - Tubo':
+            if 'Sem - Tubo' in v:
                 write_csv.writerow([k, v, path_arquivo+k+".jpg", path_mask+"semtubo.jpg"])
             else:
                 write_csv.writerow([k, v, path_arquivo+k+".jpg", path_mask+k+".jpg"])
