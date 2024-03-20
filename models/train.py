@@ -90,11 +90,3 @@ def train(train_ids, val_ids, return_train_path = None):
         shuffle=True,
         verbose=1,
         initial_epoch=previous_epoch_number)
-    
-    # Salvando no drive
-    results_dir_drive = os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults", current_time)
-    os.makedirs(results_dir_drive, exist_ok=True)  
-    for filename in os.listdir(results_dir):
-        src = os.path.join(results_dir, filename)
-        dst = os.path.join(results_dir_drive, filename)
-        os.rename(src, dst)

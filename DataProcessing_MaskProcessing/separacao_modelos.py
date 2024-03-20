@@ -13,9 +13,21 @@ def generate_csv(path, map_csv):
         for k, v in map_csv.items():
             if 'Sem - Tubo' in v:
                 write_csv.writerow([k, v, path_arquivo+k+".jpg", path_mask+"semtubo.jpg"])
+            elif 'Sem - Tubo2' in v:
+                write_csv.writerow([k, ['Sem - Tubo'], path_arquivo+k+".png", path_mask+"semtubo.jpg"])
             else:
                 write_csv.writerow([k, v, path_arquivo+k+".jpg", path_mask+k+".jpg"])
 
+def populate_maps(list_without_tubes, temp_ids, map_csv_train, map_csv_test, map_csv_validation, map_name = "Sem - Tubo"):
+    # Including data without tubes
+    for i in list_without_tubes:
+        map_csv_train[i] = [map_name]
+    for count, value in enumerate(temp_ids):
+        if count//2 == 0:
+            map_csv_test[value] = [map_name]
+        else:
+            map_csv_validation[value] = [map_name]
+    return map_csv_train, map_csv_test, map_csv_validation
 
 tube_position1 = 'CVC - Normal'
 tube_position2 = 'CVC - Borderline'
@@ -92,28 +104,46 @@ map_csv_validation = {key: temp[key] for key in list_ids_validation}
 
 with open(path_csv_read_no_tube,'r') as folder_csv:
     read_csv = csv.DictReader(folder_csv)
-    list_without_tubes = []
+    list_without_tubes_one = []
+    list_without_tubes_two = []
     for line in read_csv:
         if line[tube_position1] == '0' and line[tube_position2] == '0' and line[tube_position3] == '0':
-            list_without_tubes.append(line['StudyInstanceUID'])
+            if line['PatientID'] == 'unknown':
+                list_without_tubes_two.append(line['StudyInstanceUID'])
+            else:
+                list_without_tubes_one.append(line['StudyInstanceUID'])
     
-    random.shuffle(list_without_tubes)
+    random.shuffle(list_without_tubes_one)
+    random.shuffle(list_without_tubes_two)
     
     # 60% training data 40% split between testing and validation.
-    percentage_balancing = int(0.6 *len(list_without_tubes))
+    percentage_balancing = int(0.6 *len(list_without_tubes_one))
     
     # Split 40% on temp_ids
-    temp_ids = list_without_tubes[percentage_balancing:]
+    temp_ids = list_without_tubes_one[percentage_balancing:]
     random.shuffle(temp_ids)
     
     # Including data without tubes
-    for i in list_without_tubes[:percentage_balancing]:
-        map_csv_train[i] = ['Sem - Tubo']
-    for count, value in enumerate(temp_ids):
-        if count//2 == 0:
-            map_csv_test[value] = ['Sem - Tubo']
-        else:
-            map_csv_validation[value] = ['Sem - Tubo']
+    map_csv_train, map_csv_test, map_csv_validation = populate_maps(list_without_tubes_one[:percentage_balancing],
+                                                                    temp_ids,
+                                                                    map_csv_train,
+                                                                    map_csv_test,
+                                                                    map_csv_validation)
+            
+    # NOVOS DATAS
+    # 60% training data 40% split between testing and validation.
+    percentage_balancing = int(0.6 *len(list_without_tubes_one))
+    
+    # Split 40% on temp_ids
+    temp_ids = list_without_tubes_two[percentage_balancing:]
+    random.shuffle(temp_ids)
+    
+    map_csv_train, map_csv_test, map_csv_validation = populate_maps(list_without_tubes_two[:percentage_balancing],
+                                                                    temp_ids,
+                                                                    map_csv_train,
+                                                                    map_csv_test,
+                                                                    map_csv_validation,
+                                                                    'Sem - Tubo2')
 
 generate_csv(path_csv_write+path_csv_train, map_csv_train)
 generate_csv(path_csv_write+path_csv_test, map_csv_test)
