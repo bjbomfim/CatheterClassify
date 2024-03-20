@@ -132,7 +132,7 @@ with open(path_csv_read_no_tube,'r') as folder_csv:
             
     # NOVOS DATAS
     # 60% training data 40% split between testing and validation.
-    percentage_balancing = int(0.6 *len(list_without_tubes_one))
+    percentage_balancing = int(0.6 *len(list_without_tubes_two))
     
     # Split 40% on temp_ids
     temp_ids = list_without_tubes_two[percentage_balancing:]
