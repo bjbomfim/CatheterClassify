@@ -1,4 +1,5 @@
 from os import system
+
 class SaveDataTrainResults(keras.callbacks.Callback):
     
     def __init__ (self, path_to_get_resultus, path_to_save):

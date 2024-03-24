@@ -7,6 +7,7 @@ from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, CSVLogger, Mo
 from tensorflow.keras.models import load_model
 
 from . import data_generator as generator
+from CustomCallbacks import save_data_train_results as saveResults
 
 
 def train(train_ids, val_ids, return_train_path = None):
@@ -73,8 +74,9 @@ def train(train_ids, val_ids, return_train_path = None):
                                     monitor='val_loss',
                                     save_weights_only=True,
                                     save_best_only=True)
+    save_data_results = saveResults(path_to_get_resultus= results_dir, path_to_save = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults")
     
-    callbacks_list = [tensorboard, early_stopping, csv_logger, model_checkpoint, reduce_lr]
+    callbacks_list = [tensorboard, early_stopping, csv_logger, model_checkpoint, reduce_lr, save_data_results]
 
     # Treino
     
