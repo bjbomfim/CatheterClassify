@@ -7,7 +7,7 @@ from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, CSVLogger, Mo
 from tensorflow.keras.models import load_model
 
 from . import data_generator as generator
-from CustomCallbacks import save_data_train_results as saveResults
+from .CustomCallbacks import save_data_train_results as saveResults
 
 
 def train(train_ids, val_ids, return_train_path = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults/2024_03_21_20_03_25_PM"):
