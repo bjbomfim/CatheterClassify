@@ -40,7 +40,7 @@ def train(train_ids, val_ids, return_train_path = "/content/drive/MyDrive/Colab 
             for row in csv_reader:
                 last_epoch = int(row['epoch'])
         previous_epoch_number = last_epoch
-        model.load_weights(os.path.join(return_train_path), "best_segmentation_model.h5")
+        model.load_weights(os.path.join(return_train_path, "best_segmentation_model.h5"))
     
     model.compile(
         'Adam',
