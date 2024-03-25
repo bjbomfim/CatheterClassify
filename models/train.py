@@ -74,7 +74,7 @@ def train(train_ids, val_ids, return_train_path = "/content/drive/MyDrive/Colab 
                                     monitor='val_loss',
                                     save_weights_only=True,
                                     save_best_only=True)
-    save_data_results = saveResults(path_to_get_resultus= results_dir, path_to_save = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults")
+    save_data_results = saveResults.SaveDataTrainResults(path_to_get_resultus= results_dir, path_to_save = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults")
     
     callbacks_list = [tensorboard, early_stopping, csv_logger, model_checkpoint, reduce_lr, save_data_results]
 
