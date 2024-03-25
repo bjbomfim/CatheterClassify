@@ -3,9 +3,9 @@ from tensorflow.keras.callbacks import Callback
 
 class SaveDataTrainResults(Callback):
     
-    def __init__ (self, path_to_get_resultus, path_to_save):
+    def __init__ (self, path_to_get_results, path_to_save):
         super().__init__()
-        self.path_to_get_resultus = path_to_get_resultus
+        self.path_to_get_results = path_to_get_results
         self.path_to_save = path_to_save
         
     
