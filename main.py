@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 import csv
 
-from . import train
+from .models import train
 
 def segmentation_train(train_ids, val_ids):
     train.train(train_ids=train_ids, val_ids=val_ids)
