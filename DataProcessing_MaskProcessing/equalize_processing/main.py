@@ -9,10 +9,11 @@ def pre_processing(images, tecnic):
     return eh.equalize_histogram_images(images=images, tecnic=tecnic)
     
 
-def save_images(images, path="/content/data/xrays/train/"):
+def save_images(images, path="/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing"):
     print("Saving images")
+    print(f"{path}/{images[0][1]}")
     for image in images:
-        save_file = path+os.path.basename(image.name)
+        save_file = os.path.join(path, os.path.basename(image.name))
         cv.imwrite(save_file, image.image)
     print("Images saved completely")
 
