@@ -11,7 +11,7 @@ def pre_processing(images, tecnic):
 
 def save_images(images, path="/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing"):
     print("Saving images")
-    print(f"{os.path.join(path, os.path.basename(image.name))}")
+    print(f"{os.path.join(path, os.path.basename(images[0].name))}")
     for image in images:
         save_file = os.path.join(path, os.path.basename(image.name))
         cv.imwrite(save_file, image.image)
