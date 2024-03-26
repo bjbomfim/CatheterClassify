@@ -9,7 +9,7 @@ def pre_processing(images, tecnic):
     return eh.equalize_histogram_images(images=images, tecnic=tecnic)
     
 
-def save_images(images, path="/content/data/xrays/"):
+def save_images(images, path="/content/data/xrays/train/"):
     print("Saving images")
     for image in images:
         save_file = path+os.path.basename(image.name)
