@@ -8,7 +8,7 @@ def generate_csv(path, map_csv):
         write_csv = csv.writer(folder_csv)
 
         write_csv.writerow(['ID', 'labels', 'Path_Arquivo', 'Path_Mask'])
-        path_arquivo = "/content/xrays/train_imagens/" # "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train/"  #
+        path_arquivo = "/content/xrays/train_imagens/PreProcessing" # "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train/"  #
         path_mask = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC/"  #"/content/mask_imagens/" #
         for k, v in map_csv.items():
             if 'Sem - Tubo' in v:
