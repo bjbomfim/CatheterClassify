@@ -1,4 +1,3 @@
-import shutil
 import os
 from tensorflow.keras.callbacks import Callback
 
@@ -13,4 +12,5 @@ class SaveDataTrainResults(Callback):
     def on_epoch_begin(self, epoch, logs=None):
         if epoch % 5 == 0 and os.path.exists(self.path_to_get_results):
             print("Salvando resultados do treino")
-            shutil.copytree(self.path_to_get_results, self.path_to_save)
+            command = f"!cp {self.path_to_get_results} {self.path_to_save}"
+            os.system(f"!{command}")
