@@ -8,7 +8,7 @@ def generate_csv(path, map_csv):
         write_csv = csv.writer(folder_csv)
 
         write_csv.writerow(['ID', 'labels', 'Path_Arquivo', 'Path_Mask'])
-        path_arquivo = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train/" # "/content/train_imagens/" #
+        path_arquivo = "/content/xrays/train_imagens/" # "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train/"  #
         path_mask = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC/"  #"/content/mask_imagens/" #
         for k, v in map_csv.items():
             if 'Sem - Tubo' in v:
@@ -22,11 +22,13 @@ def populate_maps(list_without_tubes, temp_ids, map_csv_train, map_csv_test, map
     # Including data without tubes
     for i in list_without_tubes:
         map_csv_train[i] = [map_name]
-    for count, value in enumerate(temp_ids):
-        if count//2 == 0:
+    tmp = 0
+    for value in temp_ids:
+        if tmp % 2 == 0:
             map_csv_test[value] = [map_name]
         else:
             map_csv_validation[value] = [map_name]
+        tmp += 1
     return map_csv_train, map_csv_test, map_csv_validation
 
 tube_position1 = 'CVC - Normal'
@@ -144,6 +146,10 @@ with open(path_csv_read_no_tube,'r') as folder_csv:
                                                                     map_csv_test,
                                                                     map_csv_validation,
                                                                     'Sem - Tubo2')
+
+print(len(map_csv_train))
+print(len(map_csv_test))
+print(len(map_csv_validation))
 
 generate_csv(path_csv_write+path_csv_train, map_csv_train)
 generate_csv(path_csv_write+path_csv_test, map_csv_test)
