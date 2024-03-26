@@ -1,4 +1,5 @@
-from os import system
+import shutil
+import os
 from tensorflow.keras.callbacks import Callback
 
 class SaveDataTrainResults(Callback):
@@ -10,6 +11,6 @@ class SaveDataTrainResults(Callback):
         
     
     def on_epoch_begin(self, epoch, logs=None):
-        if epoch % 5 == 0:
+        if epoch % 5 == 0 and os.path.exists(self.path_to_get_results):
             print("Salvando resultados do treino")
-            system(f"cp -r {self.path_to_get_results} {self.path_to_save}")
+            shutil.copytree(self.path_to_get_results, self.path_to_save)

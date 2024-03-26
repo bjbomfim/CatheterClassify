@@ -1,6 +1,7 @@
 from collections import namedtuple
 import equalize_histogram as eh
 import cv2 as cv
+import csv
 import argparse
 import os
 
@@ -8,71 +9,69 @@ def pre_processing(images, tecnic):
     return eh.equalize_histogram_images(images=images, tecnic=tecnic)
     
 
-def save_images(images, path: str):
+def save_images(images, path="/content/data/xrays/"):
     print("Saving images")
     for image in images:
-        save_file = f"{path}/{image.name}"
+        save_file = path+os.path.basename(image.name)
         cv.imwrite(save_file, image.image)
     print("Images saved completely")
 
-def load_images(images_paths, path):
+def load_images(images_data):
     images = []
     ImageTuple = namedtuple("Image", ["name", "image"])
-    for image_name in images_paths:
-        image_path = os.path.join(path, image_name)
-        image = cv.imread(image_path, cv.IMREAD_GRAYSCALE)
+    for row in images_data:
+        image = cv.imread(row[1], cv.IMREAD_GRAYSCALE)
         if image is not None:
-            images.append(ImageTuple(image_name, image))
+            images.append(ImageTuple(row[1], image))
     return images
 
-def read_images(path, saved_path):
+def read_csv(path):
     print("Reading images")
     
-    images_names = os.listdir(path)
-    images_saved = os.listdir(saved_path)
+    images_data = []
     
-    images_names = list(set(images_names).difference(images_saved))
+    with open(path, "r") as csv_file:
+        read = csv.DictReader(csv_file)
+        
+        for row in read:
+            tupleRow = (row["ID"], row["Path_Arquivo"])
+            images_data.append(tupleRow)
     
-    print("Images read completely")
-    return images_names
+    return images_data
 
 def main():
     
     images = []
     
     parser = argparse.ArgumentParser(description=" Histogram Equalization.")
-    parser.add_argument("-path", required=True, type=str)
-    parser.add_argument("-pathToGetImage", required=True, type=str)
-    parser.add_argument("-pathToSave", required=True, type=str)
+    parser.add_argument("-csvDataPath", required=True, type=str)
     
     args = parser.parse_args()
     
-    path = args.path
-    path_to_get_image = args.pathToGetImage
-    path_to_save_CLAHE = args.pathToSave
+    path = args.csvDataPath
     
-    print(f"Args received: path: {path} pathToGetImage: {path_to_get_image} pathToSave1: {path_to_save_CLAHE}")
+    print(f"Args received: path: {path} ")
     
-    images_names = read_images(path, path_to_save_CLAHE)
+    images_data = read_csv(path)
     
-    elemento_inicial_do_resto = (len(images_names)//100) * 100
-    elemento_final = elemento_inicial_do_resto+(len(images_names)%100)
-    print(len(images_names))
-    for group in range(100, len(images_names), 100):
+    elemento_inicial_do_resto = (len(images_data)//100) * 100
+    elemento_final = elemento_inicial_do_resto+(len(images_data)%100)
+    print(len(images_data))
+    for group in range(100, len(images_data), 100):
         print(f"Group: {group}")
-        images = load_images(images_names[group-100:group], path_to_get_image)
+        images = load_images(images_data[group-100:group])
         ## Nao utilizado como equalizador de histograma principal.
         # processed_images_equalized = pre_processing(images, 1)
         # save_images(processed_images_equalized, path_to_save_equalized)
         
         processed_images_CLAHE = pre_processing(images, 2)
-        save_images(processed_images_CLAHE, path_to_save_CLAHE)
+        save_images(processed_images_CLAHE)
     
-    if len(images_names) % 100 != 0: 
+    if len(images_data) % 100 != 0: 
         print(f"Group: {elemento_final}")
-        images = load_images(images_names[elemento_inicial_do_resto:elemento_final], path_to_get_image)
+        images = load_images(images_data[elemento_inicial_do_resto:elemento_final])
 
         processed_images_CLAHE = pre_processing(images, 2)
-        save_images(processed_images_CLAHE, path_to_save_CLAHE)
+        save_images(processed_images_CLAHE)
 
 main()
