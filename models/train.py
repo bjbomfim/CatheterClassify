@@ -10,7 +10,7 @@ from . import data_generator as generator
 from .CustomCallbacks import save_data_train_results as saveResults
 
 
-def train(train_ids, val_ids, return_train_path = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults/2024_03_21_20_03_25_PM"):
+def train(train_ids, val_ids, return_train_path = None):
     
     
     sm.set_framework('tf.keras')
