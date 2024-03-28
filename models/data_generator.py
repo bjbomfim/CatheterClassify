@@ -37,7 +37,7 @@ class DataGenerator(Sequence):
     
     def on_epoch_end(self):
         
-        
+        l = None
         # # Salvando a prediçao do modelo a cada 5 epocas
         # if self.num_epoch % 5 == 0:
         #     sample_idx = self.list_IDs[0]
@@ -59,8 +59,8 @@ class DataGenerator(Sequence):
         # self.num_epoch += 1
         
         # Shuffle
-        if self.shuffle:
-            self.indexes = sample(self.indexes, len(self.indexes))
+        # if self.shuffle:
+        #     self.indexes = sample(self.indexes, len(self.indexes))
 
     def __getitem__(self, index):
         indexes = self.indexes[index*self.batch_size : (index + 1)*self.batch_size]
