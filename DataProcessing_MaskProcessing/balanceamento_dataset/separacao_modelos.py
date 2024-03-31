@@ -120,12 +120,13 @@ with open(path_csv_read_no_tube,'r') as folder_csv:
     random.shuffle(list_without_tubes_one)
     #random.shuffle(list_without_tubes_two)
     
+    # Quantidade de sem tubo igual a com tubo se possivel
     sum_with_tube = (len(list_ids_train)+len(list_ids_test)+len(list_ids_validation))
     print(f"Valores com tubo {sum_with_tube}")
     print(f"Valores sem tubo {list_without_tubes_one}")
-    
+    dif_sem_com_tubo = len(list_without_tubes_one) - sum_with_tube
     if len(list_without_tubes_one) > sum_with_tube:
-        for i in range(list_without_tubes_one-sum_with_tube):
+        for i in range(dif_sem_com_tubo):
             random.shuffle(list_without_tubes_one)
             list_without_tubes_one.pop(i)
     
