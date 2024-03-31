@@ -61,5 +61,5 @@ class DataGenerator(Sequence):
             else:
                 print(f"Erro ao carregar a imagem: {idx[0]}")
 
-        return np.array(X), np.array(Y)
+        return np.array(I) ,np.array(X), np.array(Y)
 
