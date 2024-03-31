@@ -35,7 +35,7 @@ def read_csv(path):
         read = csv.DictReader(csv_file)
         
         for row in read:
-            tupleRow = (row["ID"], row["Path_Arquivo"])
+            tupleRow = (row["ID"], os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train", os.path.basename(row["Path_Arquivo"])))
             images_data.append(tupleRow)
     
     return images_data
