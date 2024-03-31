@@ -129,7 +129,7 @@ with open(path_csv_read_no_tube,'r') as folder_csv:
         for i in range(dif_sem_com_tubo):
             if i % 10 == 0:
                 random.shuffle(list_without_tubes_one)
-            list_without_tubes_one.pop(i)
+            list_without_tubes_one.pop()
     
     # 60% training data 40% split between testing and validation.
     percentage_balancing = int(0.6 *len(list_without_tubes_one))
