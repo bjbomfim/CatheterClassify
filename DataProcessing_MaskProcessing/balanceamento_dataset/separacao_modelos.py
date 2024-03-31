@@ -127,7 +127,8 @@ with open(path_csv_read_no_tube,'r') as folder_csv:
     dif_sem_com_tubo = len(list_without_tubes_one) - sum_with_tube
     if len(list_without_tubes_one) > sum_with_tube:
         for i in range(dif_sem_com_tubo):
-            random.shuffle(list_without_tubes_one)
+            if i % 10 == 0:
+                random.shuffle(list_without_tubes_one)
             list_without_tubes_one.pop(i)
     
     # 60% training data 40% split between testing and validation.
