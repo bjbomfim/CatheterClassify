@@ -44,7 +44,7 @@ def train(train_ids, val_ids, return_train_path = None):
     
     model.compile(
         'Adam',
-        loss=sm.losses.dice_loss,
+        loss=sm.losses.binary_focal_dice_loss,
         metrics=[sm.metrics.iou_score, sm.metrics.f1_score, sm.metrics.precision , sm.metrics.recall],
     )
 
