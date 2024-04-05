@@ -122,7 +122,7 @@ with open(path_csv_read_no_tube,'r') as folder_csv:
     # Quantidade de sem tubo igual a com tubo se possivel
     sum_with_tube = (len(list_ids_train)+len(list_ids_test)+len(list_ids_validation))
     print(f"Valores com tubo {sum_with_tube}")
-    print(f"Valores sem tubo {len(list_without_tubes_one)+{len(list_without_tubes_two)}}")
+    print(f"Valores sem tubo {len(list_without_tubes_one)+len(list_without_tubes_two)}")
     dif_sem_com_tubo = (len(list_without_tubes_one)+len(list_without_tubes_two)) - sum_with_tube
     if (len(list_without_tubes_one)+len(list_without_tubes_two)) > sum_with_tube:
         for i in range(dif_sem_com_tubo):
