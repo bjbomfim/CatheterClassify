@@ -31,13 +31,16 @@ def read_csv(path):
     
     images_data = []
     
+    image_equalizad = [os.path.splitext(i)[0] for i in os.listdir("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing")]
+    
     with open(path, "r") as csv_file:
         read = csv.DictReader(csv_file)
         
         for row in read:
-            tupleRow = (row["ID"], os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train", os.path.basename(row["Path_Arquivo"])))
-            images_data.append(tupleRow)
-    
+            if row["ID"] not in image_equalizad:
+                tupleRow = (row["ID"], os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train", os.path.basename(row["Path_Arquivo"])))
+                images_data.append(tupleRow)
+        
     return images_data
 
 def main():
