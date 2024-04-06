@@ -61,15 +61,16 @@ def main():
     elemento_inicial_do_resto = (len(images_data)//100) * 100
     elemento_final = elemento_inicial_do_resto+(len(images_data)%100)
     print(len(images_data))
-    for group in range(100, len(images_data), 100):
-        print(f"Group: {group}")
-        images = load_images(images_data[group-100:group])
-        ## Nao utilizado como equalizador de histograma principal.
-        # processed_images_equalized = pre_processing(images, 1)
-        # save_images(processed_images_equalized, path_to_save_equalized)
-        
-        processed_images_CLAHE = pre_processing(images, 2)
-        save_images(processed_images_CLAHE)
+    if len(images_data) > 100:
+        for group in range(100, len(images_data), 100):
+            print(f"Group: {group}")
+            images = load_images(images_data[group-100:group])
+            ## Nao utilizado como equalizador de histograma principal.
+            # processed_images_equalized = pre_processing(images, 1)
+            # save_images(processed_images_equalized, path_to_save_equalized)
+            
+            processed_images_CLAHE = pre_processing(images, 2)
+            save_images(processed_images_CLAHE)
     
     if len(images_data) % 100 != 0: 
         print(f"Group: {elemento_final}")
