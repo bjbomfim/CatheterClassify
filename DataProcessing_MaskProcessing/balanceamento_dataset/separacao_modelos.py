@@ -111,7 +111,7 @@ with open(path_csv_read_no_tube,'r') as folder_csv:
     list_without_tubes_one = []
     list_without_tubes_two = []
     for line in read_csv:
-        if line[tube_position1] == '0' and line[tube_position2] == '0' and line[tube_position3] == '0' and line[tube_position4] == 0:
+        if line[tube_position1] == '0' and line[tube_position2] == '0' and line[tube_position3] == '0' and line[tube_position4] == '0':
             if line['PatientID'] == 'unknown':
                 continue
                 list_without_tubes_two.append(line['StudyInstanceUID'])
