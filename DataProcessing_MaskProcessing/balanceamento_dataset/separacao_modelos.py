@@ -9,7 +9,7 @@ def generate_csv(path, map_csv):
 
         write_csv.writerow(['ID', 'labels', 'Path_Arquivo', 'Path_Mask'])
         path_arquivo = "/content/xrays/train_imagens/PreProcessing/" # "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/train/"  #
-        path_mask = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC/"  #"/content/mask_imagens/" #
+        path_mask = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/NGT/"  #"/content/mask_imagens/" #
         for k, v in map_csv.items():
             if k != ".DS_Store":
                 if 'Sem - Tubo' in v:
@@ -32,14 +32,15 @@ def populate_maps(list_without_tubes, temp_ids, map_csv_train, map_csv_test, map
         tmp += 1
     return map_csv_train, map_csv_test, map_csv_validation
 
-tube_position1 = 'CVC - Normal'
-tube_position2 = 'CVC - Borderline'
-tube_position3 = 'CVC - Abnormal'
+tube_position1 = 'NGT - Normal'
+tube_position2 = 'NGT - Borderline'
+tube_position3 = 'NGT - Abnormal'
+tube_position4 = 'NGT - Incompletely Imaged'
 
 # Resultado todal 
-map_cvc = {tube_position1: 0, tube_position2: 0, tube_position3: 0}
+map_cvc = {tube_position1: 0, tube_position2: 0, tube_position3: 0, tube_position4: 0}
 # Possui os ids relativos ao tipo de classe
-map_id = {tube_position1: [], tube_position2: [], tube_position3: [], '2Tipos': [], '3Tipos': []}
+map_id = {tube_position1: [], tube_position2: [], tube_position3: [], tube_position4: [], '2Tipos': [], '3Tipos': []}
 
 map_csv_train = {}
 map_csv_validation = {}
@@ -110,8 +111,9 @@ with open(path_csv_read_no_tube,'r') as folder_csv:
     list_without_tubes_one = []
     list_without_tubes_two = []
     for line in read_csv:
-        if line[tube_position1] == '0' and line[tube_position2] == '0' and line[tube_position3] == '0':
+        if line[tube_position1] == '0' and line[tube_position2] == '0' and line[tube_position3] == '0' and line[tube_position4] == 0:
             if line['PatientID'] == 'unknown':
+                continue
                 list_without_tubes_two.append(line['StudyInstanceUID'])
             else:
                 list_without_tubes_one.append(line['StudyInstanceUID'])
@@ -144,20 +146,20 @@ with open(path_csv_read_no_tube,'r') as folder_csv:
                                                                     map_csv_test,
                                                                     map_csv_validation)
             
-    # NOVOS DATAS
-    # 60% training data 40% split between testing and validation.
-    percentage_balancing = int(0.6 *len(list_without_tubes_two))
+    # # NOVOS DATAS
+    # # 60% training data 40% split between testing and validation.
+    # percentage_balancing = int(0.6 *len(list_without_tubes_two))
     
-    # Split 40% on temp_ids
-    temp_ids = list_without_tubes_two[percentage_balancing:]
-    random.shuffle(temp_ids)
+    # # Split 40% on temp_ids
+    # temp_ids = list_without_tubes_two[percentage_balancing:]
+    # random.shuffle(temp_ids)
     
-    map_csv_train, map_csv_test, map_csv_validation = populate_maps(list_without_tubes_two[:percentage_balancing],
-                                                                    temp_ids,
-                                                                    map_csv_train,
-                                                                    map_csv_test,
-                                                                    map_csv_validation,
-                                                                    'Sem - Tubo2')
+    # map_csv_train, map_csv_test, map_csv_validation = populate_maps(list_without_tubes_two[:percentage_balancing],
+    #                                                                 temp_ids,
+    #                                                                 map_csv_train,
+    #                                                                 map_csv_test,
+    #                                                                 map_csv_validation,
+    #                                                                 'Sem - Tubo2')
 
 print(len(map_csv_train))
 print(len(map_csv_test))
