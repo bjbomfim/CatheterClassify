@@ -35,13 +35,16 @@ def maskCreation(points, path, height, width):
 
 def rasterization(points: list, path_to_save: str, size_image: str):
     
+    image_rastered = [os.path.splitext(i)[0] for i in os.listdir("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/NGT")]
+    
     for key, item in points.items():
-        mask_save_path = path_to_save+'/'+key+'.jpg'
-        image = size_image.loc[size_image['StudyInstanceUID']==key]
-        if image is not None:
-            height = image['Height'].values[0]
-            width = image['Width'].values[0]
-            maskCreation(item, mask_save_path, height, width)
+        if key not in image_rastered:
+            mask_save_path = path_to_save+'/'+key+'.jpg'
+            image = size_image.loc[size_image['StudyInstanceUID']==key]
+            if image is not None:
+                height = image['Height'].values[0]
+                width = image['Width'].values[0]
+                maskCreation(item, mask_save_path, height, width)
     
 
 def main():
