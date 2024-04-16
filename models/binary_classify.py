@@ -40,8 +40,6 @@ def find_contours(name_img):
         x, y, w, h = cv2.boundingRect(contour)
         length = max(w, h)
         width = min(w, h)
-        print("Comprimento:", length)
-        print("Largura:", width)
         return length, width
         
     else:
