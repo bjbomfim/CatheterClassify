@@ -45,7 +45,7 @@ def find_contours(name_img):
         return length, width
         
     else:
-        print("Nenhum contorno encontrado.")
+        print(f"-------------- Nenhum contorno encontrado id {name_img} --------------")
         return None, None
 
 def predict_tube(csv_path):
@@ -64,7 +64,7 @@ def predict_tube(csv_path):
             if length is None:
                 continue
             # preditc = determine_tube(length, width)
-            images_map[key] = (length, width) if length is not None else (None, None)
+            images_map[key] = (length, width) if length is not None else (-100, -100)
             
         else:
             print(f"Não existe caminho para imagem: {key}")
@@ -75,7 +75,7 @@ def predict_tube(csv_path):
 
         write_csv.writerow(['ID', 'Comprimento', 'Largura'])
         for k, v in images_map.items():
-            if v[0] is None:
+            if v[0] == -100:
                 print(f"valor de {k} é None")
                 write_csv.writerow([k, "None", "None"])
             else:
