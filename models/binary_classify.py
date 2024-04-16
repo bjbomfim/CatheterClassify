@@ -64,7 +64,7 @@ def predict_tube(csv_path):
             if length is None:
                 continue
             # preditc = determine_tube(length, width)
-            images_map[key] = (length, width)
+            images_map[key] = (length, width) if length is not None else (None, None)
             
         else:
             print(f"Não existe caminho para imagem: {key}")
