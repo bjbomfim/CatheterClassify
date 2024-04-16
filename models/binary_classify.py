@@ -52,31 +52,32 @@ def predict_tube(csv_path):
     # Abrir o csv
     images_list = os.listdir("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC")
     # Popular o map de imagens
-    images_map = {key:0 for key in images_list}
+    images_map = {key:0 for key in images_list if key != "semtubo.jpg"}
     print(len(images_map))
     # Fazer a predicao
     for key, value in images_map.items():
         if os.path.exists(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC", key)):
             length, width = find_contours(key)
             
-            if length is None:
-                continue
             # preditc = determine_tube(length, width)
-            images_map[key] = (length, width) if length is not None else (-100, -100)
+            images_map[key] = (length, width) if length is not None else (None, None)
             
         else:
             print(f"Não existe caminho para imagem: {key}")
     
+    temp = 0
     # Salvar os resultados no csv
     with open("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/labels/tamanho_tubos.csv", 'w', newline='') as folder_csv:
         write_csv = csv.writer(folder_csv)
 
         write_csv.writerow(['ID', 'Comprimento', 'Largura'])
         for k, v in images_map.items():
-            if v[0] == -100:
+            if v[0] == None:
                 print(f"valor de {k} é None")
                 write_csv.writerow([k, "None", "None"])
             else:
                 write_csv.writerow([k, v[0], v[1]])
+                temp+=1
+    print(f"Todas as mascaras foram analizadas. Total: {temp}")
 
 predict_tube("")
