@@ -55,7 +55,7 @@ def predict_tube(csv_path):
     images_list = os.listdir("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC")
     # Popular o map de imagens
     images_map = {key:0 for key in images_list}
-    
+    print(len(images_map))
     # Fazer a predicao
     for key, value in images_map.items():
         if os.path.exists(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC", key)):
@@ -75,6 +75,10 @@ def predict_tube(csv_path):
 
         write_csv.writerow(['ID', 'Comprimento', 'Largura'])
         for k, v in images_map.items():
-            write_csv.writerow([k, v[0], v[1]])
+            if v[0] is None:
+                print(f"valor de {k} é None")
+                write_csv.writerow([k, "None", "None"])
+            else:
+                write_csv.writerow([k, v[0], v[1]])
 
 predict_tube("")
