@@ -23,7 +23,7 @@ def determine_tube(length, width, type):
         return 0
 
 def find_contours(name_img):
-    img = cv2.imread(name_img, cv2.IMREAD_GRAYSCALE)
+    img = cv2.imread(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC", name_img), cv2.IMREAD_GRAYSCALE)
     img = cv2.resize(img, (384, 384))
 
     _, binary_image = cv2.threshold(img, 200, 255, cv2.THRESH_BINARY)
