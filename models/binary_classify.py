@@ -58,7 +58,7 @@ def predict_tube(csv_path):
     
     # Fazer a predicao
     for key, value in images_map.items():
-        if os.path.exists(key):
+        if os.path.exists(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/CVC", key)):
             length, width = find_contours(key)
             
             if length is None:
