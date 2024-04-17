@@ -23,7 +23,7 @@ def determine_tube(length, width, type):
         return 0
 
 def find_contours(name_img):
-    img = cv2.imread(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/NGT", name_img), cv2.IMREAD_GRAYSCALE)
+    img = cv2.imread(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/ETT", name_img), cv2.IMREAD_GRAYSCALE)
     img = cv2.resize(img, (384, 384))
 
     _, binary_image = cv2.threshold(img, 200, 255, cv2.THRESH_BINARY)
@@ -50,13 +50,13 @@ def predict_tube(csv_path):
     
     
     # Abrir o csv
-    images_list = os.listdir("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/NGT")
+    images_list = os.listdir("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/ETT")
     # Popular o map de imagens
     images_map = {key:0 for key in images_list if key != "semtubo.jpg"}
     print(len(images_map))
     # Fazer a predicao
     for key, value in images_map.items():
-        if os.path.exists(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/NGT", key)):
+        if os.path.exists(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/ETT", key)):
             length, width = find_contours(key)
             
             # preditc = determine_tube(length, width)
