@@ -106,19 +106,17 @@ def train_with_ensemble(train_ids, val_ids, pretrained_model_path=None, return_t
     batch_size = int(os.environ["BATCH_SIZE"])
     image_size = (int(os.environ["IMAGE_SIZE"]), int(os.environ["IMAGE_SIZE"]))
 
+    # Criando Modelo
     # Realizando o Ensemble
     if pretrained_model_path:
         print(pretrained_model_path)
-        pretrained_model = load_model(pretrained_model_path)
-        for layer in pretrained_model.layers:
+        model = sm.Unet(backbone, classes=1, activation='sigmoid')
+        model.load_weights(pretrained_model_path)
+        for layer in model.layers:
             layer.trainable = False
-        x = pretrained_model.output
         print("Realizando Ensemble")
     else:
-        x = None
-
-    # Criando Modelo
-    model = sm.Unet(backbone, classes=1, activation='sigmoid', input_tensor=x)
+        model = sm.Unet(backbone, classes=1, activation='sigmoid')  
 
     previous_epoch_number = 0
     if return_train_path is not None:
