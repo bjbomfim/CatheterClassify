@@ -108,6 +108,7 @@ def train_with_ensemble(train_ids, val_ids, pretrained_model_path=None, return_t
 
     # Realizando o Ensemble
     if pretrained_model_path:
+        print(pretrained_model_path)
         pretrained_model = load_model(pretrained_model_path)
         for layer in pretrained_model.layers:
             layer.trainable = False
