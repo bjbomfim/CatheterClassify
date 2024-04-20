@@ -45,6 +45,6 @@ def main(model_name_train = "segmentacao_Ensemble"):
     
     elif model_name_train == "segmentacao_Ensemble":
         model_path = os.getenv("MODEL_TRAIN_PATH")
-        segmentation_train(train_ids, val_ids, model_path)
+        segmentacao_ensemble(train_ids, val_ids, model_path)
     
 main()
