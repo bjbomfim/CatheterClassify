@@ -2,7 +2,6 @@ import os
 
 import numpy as np
 import cv2
-from random import sample
 
 from tensorflow.keras.utils import Sequence
 
@@ -61,5 +60,5 @@ class DataGenerator(Sequence):
             else:
                 print(f"Erro ao carregar a imagem: {idx[0]}")
 
-        return np.array(I), np.array(X), np.array(Y)
+        return np.array(X), np.array(Y)
 

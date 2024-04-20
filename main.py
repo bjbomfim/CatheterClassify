@@ -7,8 +7,11 @@ from .models import train
 
 def segmentation_train(train_ids, val_ids):
     train.train(train_ids=train_ids, val_ids=val_ids)
+
+def segmentacao_ensemble(train_ids, val_ids, model_path):
+    train.train_with_ensemble(train_ids=train_ids, val_ids=val_ids, pretrained_model_path=model_path)
     
-def main(model_name_train = "segmentacao"):
+def main(model_name_train = "segmentacao_Ensemble"):
     
     load_dotenv()
     # TREINO DE SEGMENTAÇÃO
@@ -39,5 +42,9 @@ def main(model_name_train = "segmentacao"):
     
     if model_name_train == "segmentacao":
         segmentation_train(train_ids, val_ids)
+    
+    elif model_name_train == "segmentacao_Ensemble":
+        model_path = os.getenv("MODEL_TRAIN_PATH")
+        segmentation_train(train_ids, val_ids, model_path)
     
 main()
