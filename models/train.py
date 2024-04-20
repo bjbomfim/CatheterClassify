@@ -112,6 +112,7 @@ def train_with_ensemble(train_ids, val_ids, pretrained_model_path=None, return_t
         for layer in pretrained_model.layers:
             layer.trainable = False
         x = pretrained_model.output
+        print("Realizando Ensemble")
     else:
         x = None
 
