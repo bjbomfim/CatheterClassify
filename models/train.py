@@ -112,7 +112,7 @@ def train_with_ensemble(train_ids, val_ids, pretrained_model_path=None, return_t
         print(pretrained_model_path)
         model = sm.Unet(backbone, classes=1, activation='sigmoid')
         model.load_weights(pretrained_model_path)
-        for layer in model.layers:
+        for layer in model.layers[-100:]:
             layer.trainable = False
         print("Realizando Ensemble")
     else:
