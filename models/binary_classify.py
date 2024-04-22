@@ -150,9 +150,11 @@ def predict_tube():
             if length is not None:
                 preditc = determine_tube(tube, length, width, binary_image)
                 images_map[key] = preditc
+                print(f"Predict:{preditc}")
             # Não possui tubo
             else:
                 images_map[key] = 0
+                print("Predict:0")
         else:
             print(f"Não existe caminho para imagem: {key}")
     
