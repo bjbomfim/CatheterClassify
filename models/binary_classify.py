@@ -70,7 +70,7 @@ def determine_tube(type: TubesRules, length, width, binary_image):
 def find_contours(name_img, path):
     
     img = cv2.imread(os.path.join(path, name_img), cv2.IMREAD_GRAYSCALE)
-    # img = cv2.resize(img, (384, 384))
+    img = cv2.resize(img, (384, 384))
 
     _, binary_image = cv2.threshold(img, 200, 255, cv2.THRESH_BINARY)
 
@@ -146,8 +146,8 @@ def predict_tube():
     print(f"Total de mascaras: {len(images_map)}")
     # Fazer a predicao
     for key, value in images_map.items():
+        print(f"Imagem: {key}")
         if os.path.exists(os.path.join(path, key)):
-            print(f"Imagem: {key}", end='\r')
             length, width, binary_image = find_contours(key, path)
             
             if length is not None:
