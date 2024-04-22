@@ -9,6 +9,24 @@ from tensorflow.keras.models import load_model
 from . import data_generator as generator
 from .CustomCallbacks import save_data_train_results as saveResults
 
+import tensorflow as tf
+
+def dice_coefficient(y_true, y_pred):
+    smooth = 1.0
+    intersection = tf.reduce_sum(y_true * y_pred)
+    union = tf.reduce_sum(y_true) + tf.reduce_sum(y_pred)
+    dice = (2.0 * intersection + smooth) / (union + smooth)
+    return dice
+
+def dice_loss(y_true, y_pred):
+    loss = 1 - dice_coefficient(y_true, y_pred)
+    return loss
+
+def intersection_over_union(y_true, y_pred):
+    intersection = tf.reduce_sum(y_true * y_pred)
+    union = tf.reduce_sum(y_true) + tf.reduce_sum(y_pred) - intersection
+    iou = intersection / union
+    return iou
 
 def train(train_ids, val_ids, return_train_path = None):
     
@@ -44,8 +62,8 @@ def train(train_ids, val_ids, return_train_path = None):
     
     model.compile(
         'Adam',
-        loss=sm.losses.dice_loss,
-        metrics=[sm.metrics.iou_score, sm.metrics.f1_score, sm.metrics.precision , sm.metrics.recall],
+        loss=dice_loss,
+        metrics=[intersection_over_union, sm.metrics.f1_score, sm.metrics.precision , sm.metrics.recall],
     )
 
     # Criando o DataGenerator para os dados de treino
