@@ -31,7 +31,7 @@ class TubesRules(Enum):
         if length < 17:
             return 0
         # Caso a linha seje menor que 25 e esteja perto da borda entao pode ser considerado um tubo
-        elif length < 25:
+        elif length < 35:
             # Verificar se esta na borda da imagem
             white_pixels_indices = np.argwhere(binary_image == 255)
 
