@@ -28,10 +28,10 @@ class TubesRules(Enum):
 
     @staticmethod
     def cvc_rules(length, width, binary_image) -> int:
-        if length < 17:
+        if length < 20:
             return 0
         # Caso a linha seje menor que 25 e esteja perto da borda entao pode ser considerado um tubo
-        elif length < 35:
+        elif length < 40:
             # Verificar se esta na borda da imagem
             white_pixels_indices = np.argwhere(binary_image == 255)
 
