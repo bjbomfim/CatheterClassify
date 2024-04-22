@@ -17,9 +17,9 @@ class TubesRules(Enum):
 
     def verifyTube(self, length, width, binary_image):
         rules = {
-            self.name: self.ngt_rules,
-            self.name: self.ett_rules,
-            self.name: self.cvc_rules
+            TubesRules.NGT.name: self.ngt_rules,
+            TubesRules.ETT.name: self.ett_rules,
+            TubesRules.CVC.name: self.cvc_rules
         }
         print(rules)
         if self.name in rules:
