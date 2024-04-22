@@ -42,7 +42,7 @@ class TubesRules(Enum):
                 y >= binary_image.shape[1] - proximity_threshold
                 for x, y in white_pixels_indices
             )
-            return is_near_edge
+            return 1 if is_near_edge else 0
         else:
             return 1
 
