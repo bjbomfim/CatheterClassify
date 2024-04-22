@@ -23,8 +23,7 @@ class TubesRules(Enum):
         }
         print(rules)
         if self.name in rules:
-            #return rules[self.name](length, width, binary_image)
-            raise ValueError("Tipo de Tubo valido")
+            return rules[self.name](length, width, binary_image)
         else:
             raise ValueError("Tipo de Tubo Invalido")
 
