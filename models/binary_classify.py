@@ -142,7 +142,7 @@ def predict_tube():
     print("Lendo as mascaras")
     images_list = os.listdir(path)
     # Popular o map de imagens
-    images_map = {key:0 for key in images_list if key != "semtubo.jpg"}
+    images_map = {key:0 for key in images_list if key != "semtubo.jpg" or key != "predictresults.csv"}
     print(f"Total de mascaras: {len(images_map)}")
     # Fazer a predicao
     for key, value in images_map.items():
