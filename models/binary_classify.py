@@ -17,12 +17,14 @@ class TubesRules(Enum):
 
     def verifyTube(self, length, width, binary_image):
         rules = {
-            TubesRules.NGT: self.ngt_rules,
-            TubesRules.ETT: self.ett_rules,
-            TubesRules.CVC: self.cvc_rules
+            self.name: self.ngt_rules,
+            self.name: self.ett_rules,
+            self.name: self.cvc_rules
         }
+        print(rules)
         if self.name in rules:
-            return rules[self.name](length, width, binary_image)
+            #return rules[self.name](length, width, binary_image)
+            raise ValueError("Tipo de Tubo valido")
         else:
             raise ValueError("Tipo de Tubo Invalido")
 
