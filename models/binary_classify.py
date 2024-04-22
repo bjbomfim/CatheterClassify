@@ -20,9 +20,9 @@ class TubesRules(Enum):
 
     def verifyTube(self, length, width, binary_image):
         rules = {
-            TubesRules.NGT: self.ngt_roles,
-            TubesRules.ETT: self.ett_roles,
-            TubesRules.CVC: self.cvc_roles
+            TubesRules.NGT: self.ngt_rules,
+            TubesRules.ETT: self.ett_rules,
+            TubesRules.CVC: self.cvc_rules
         }
         if self.tube_type in rules:
             return rules[self.tube_type](length, width, binary_image)
