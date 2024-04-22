@@ -100,7 +100,7 @@ def salvar_csv(path, images_map):
         
         for k, v in images_map.items():
             for dado in dados:
-                if dado['ID'] == k:
+                if dado['ID']+'.jpg' == k:
                     dado['Predict'] = v
                     
                 # Possiveis dados que nao foram verificados  
