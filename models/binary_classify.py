@@ -27,7 +27,7 @@ class TubesRules(Enum):
             raise ValueError("Tipo de Tubo Invalido")
 
     @staticmethod
-    def cvc_rules(length, width, binary_image):
+    def cvc_rules(length, width, binary_image) -> int:
         if length < 17:
             return 0
         # Caso a linha seje menor que 25 e esteja perto da borda entao pode ser considerado um tubo
@@ -47,14 +47,14 @@ class TubesRules(Enum):
             return 1
 
     @staticmethod
-    def ngt_rules(length, width, binary_image):
+    def ngt_rules(length, width, binary_image) -> int:
         if length < 50:
             return 0
         else:
             return 1
 
     @staticmethod
-    def ett_rules(length, width, binary_image):
+    def ett_rules(length, width, binary_image) -> int:
         if length < 8:
             return 0
         else:
