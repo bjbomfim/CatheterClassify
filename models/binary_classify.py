@@ -27,9 +27,9 @@ class TubesRules(Enum):
             raise ValueError("Tipo de Tubo Invalido")
 
     @staticmethod
-    def cvc_rules(length, width, binary_image) -> bool:
+    def cvc_rules(length, width, binary_image):
         if length < 17:
-            return False
+            return 0
         # Caso a linha seje menor que 25 e esteja perto da borda entao pode ser considerado um tubo
         elif length < 25:
             # Verificar se esta na borda da imagem
@@ -44,21 +44,21 @@ class TubesRules(Enum):
             )
             return is_near_edge
         else:
-            return True
+            return 1
 
     @staticmethod
-    def ngt_rules(length, width, binary_image) -> bool:
+    def ngt_rules(length, width, binary_image):
         if length < 50:
-            return False
+            return 0
         else:
-            return True
+            return 1
 
     @staticmethod
-    def ett_rules(length, width, binary_image) -> bool:
+    def ett_rules(length, width, binary_image):
         if length < 8:
-            return False
+            return 0
         else:
-            return True
+            return 1
 
 def determine_tube(type: TubesRules, length, width, binary_image):
     # Definindo se existe ou não um tubo
@@ -150,6 +150,9 @@ def predict_tube():
             if length is not None:
                 preditc = determine_tube(tube, length, width, binary_image)
                 images_map[key] = preditc
+            # Não possui tubo
+            else:
+                images_map[key] = 0
         else:
             print(f"Não existe caminho para imagem: {key}")
     
