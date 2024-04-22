@@ -21,7 +21,6 @@ class TubesRules(Enum):
             TubesRules.ETT.name: self.ett_rules,
             TubesRules.CVC.name: self.cvc_rules
         }
-        print(rules)
         if self.name in rules:
             return rules[self.name](length, width, binary_image)
         else:
