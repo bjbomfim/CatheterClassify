@@ -98,15 +98,14 @@ def salvar_csv(path, images_map):
         for row in read_csv:
             dados.append(row)
         
+        alterados = 0
         for k, v in images_map.items():
             for dado in dados:
                 if dado['ID']+'.jpg' == k:
                     dado['Predict'] = v
+                    alterados += 1
                     
-                # Possiveis dados que nao foram verificados  
-                else:
-                    dado['Predict'] = -1
-    
+        print(f"Valores alterados no csv{alterados}")
     with open(path, 'w', newline='') as folder_csv:
         write_csv = csv.DictWriter(folder_csv, fieldnames=['ID', 'Conteudo', 'Predict'])
         write_csv.writeheader()
