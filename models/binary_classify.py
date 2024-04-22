@@ -2,6 +2,7 @@ import csv
 import cv2
 import os
 import numpy as np
+import argparse
 from enum import Enum
 
 ## Receber um csv com 3 colunas, ID|Conteudo|Predict
@@ -9,21 +10,66 @@ from enum import Enum
 # Conteudo é uma coluna binaria que identifica se aquela imagem possui (1) ou não (0) um tubo
 # Predict vem vazia pois está classe irá predizer se a imagem possui tubo ou não.
 
-class Labels(Enum):
-    # Definição do comprimento de um tubo para cada tipo
-    ETT = 15
-    NGT = 20
-    CVC = 30
+class TubesRules(Enum):
+    ETT = 1
+    NGT = 2
+    CVC = 3
+    
+    def __init__(self, tube_type):
+        self.tube_type = tube_type
 
-def determine_tube(length, width, type):
+    def verifyTube(self, length, width, binary_image):
+        rules = {
+            TubesRules.NGT: self.ngt_roles,
+            TubesRules.ETT: self.ett_roles,
+            TubesRules.CVC: self.cvc_roles
+        }
+        if self.tube_type in rules:
+            return rules[self.tube_type](length, width, binary_image)
+        else:
+            raise ValueError("Tipo de Tubo Invalido")
+
+    @staticmethod
+    def cvc_rules(length, width, binary_image) -> bool:
+        if length < 17:
+            return False
+        # Caso a linha seje menor que 25 e esteja perto da borda entao pode ser considerado um tubo
+        elif length < 25:
+            # Verificar se esta na borda da imagem
+            white_pixels_indices = np.argwhere(binary_image == 255)
+
+            proximity_threshold = 1  # Limiar de proximidade da borda
+            is_near_edge = any(
+                x < proximity_threshold or y < proximity_threshold or
+                x >= binary_image.shape[0] - proximity_threshold or
+                y >= binary_image.shape[1] - proximity_threshold
+                for x, y in white_pixels_indices
+            )
+            return is_near_edge
+        else:
+            return True
+
+    @staticmethod
+    def ngt_rules(length, width, binary_image) -> bool:
+        if length < 50:
+            return False
+        else:
+            return True
+
+    @staticmethod
+    def ett_rules(length, width, binary_image) -> bool:
+        if length < 8:
+            return False
+        else:
+            return True
+
+def determine_tube(type: TubesRules, length, width, binary_image):
     # Definindo se existe ou não um tubo
-    if length > type:
-        return 1
-    else:
-        return 0
+    return type.verifyTube(length, width, binary_image)
 
-def find_contours(name_img):
-    img = cv2.imread(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/NGT", name_img), cv2.IMREAD_GRAYSCALE)
+def find_contours(name_img, path):
+    
+    img = cv2.imread(os.path.join(path, name_img), cv2.IMREAD_GRAYSCALE)
     img = cv2.resize(img, (384, 384))
 
     _, binary_image = cv2.threshold(img, 200, 255, cv2.THRESH_BINARY)
@@ -40,44 +86,78 @@ def find_contours(name_img):
         x, y, w, h = cv2.boundingRect(contour)
         length = max(w, h)
         width = min(w, h)
-        return length, width
+        return length, width, binary_image
         
     else:
         print(f"-------------- Nenhum contorno encontrado id {name_img} --------------")
-        return None, None
+        return None, None, None
 
-def predict_tube(csv_path):
+def salvar_csv(path, images_map):
+    dados = []
     
+    with open(path, 'r') as folder_csv:
+        read_csv = csv.DictReader(folder_csv)
+        
+        for row in read_csv:
+            dados.append(row)
+        
+        for k, v in images_map.items():
+            for dado in dados:
+                if dado['ID'] == k:
+                    dado['Predict'] = v
+                    
+                # Possiveis dados que nao foram verificados  
+                else:
+                    dado['Predict'] = -1
+    
+    with open(path, 'w', newline='') as folder_csv:
+        write_csv = csv.DictWriter(folder_csv, fieldnames=['ID', 'Conteudo', 'Predict'])
+        write_csv.writeheader()
+        write_csv.writerows(dados)
+
+def predict_tube():
+    
+    parser = argparse.ArgumentParser(description="BinaryClassify.")
+    parser.add_argument("-pathImages", required=True, type=str)
+    parser.add_argument("-type", required=True, type=str)
+    
+    args = parser.parse_args()
+    path = args.pathImages
+    type_tube = int(args.type)
+    
+    tube = None
+    if type_tube == 1 :
+        tube = TubesRules.ETT
+        nameCsv = "ett_binario.csv"
+    elif type_tube == 2:
+        tube = TubesRules.NGT
+        nameCsv = "ngt_binario.csv"
+    elif type_tube == 3:
+        tube = TubesRules.CVC
+        nameCsv = "cvc_binario.csv"
+    
+    print(f"Tipo tubo {tube.name}")
     
     # Abrir o csv
-    images_list = os.listdir("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/NGT")
+    print("Lendo as mascaras")
+    images_list = os.listdir(path)
     # Popular o map de imagens
     images_map = {key:0 for key in images_list if key != "semtubo.jpg"}
-    print(len(images_map))
+    print(f"Total de mascaras: {len(images_map)}")
     # Fazer a predicao
     for key, value in images_map.items():
-        if os.path.exists(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/masks/NGT", key)):
-            length, width = find_contours(key)
+        if os.path.exists(os.path.join(path, key)):
+            print(f"Imagem: {key}", end='\r')
+            length, width, binary_image = find_contours(key, path)
             
-            # preditc = determine_tube(length, width)
-            images_map[key] = (length, width) if length is not None else (None, None)
-            
+            if length is not None:
+                preditc = determine_tube(tube, length, width, binary_image)
+                images_map[key] = preditc
         else:
             print(f"Não existe caminho para imagem: {key}")
     
-    temp = 0
     # Salvar os resultados no csv
-    with open("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/labels/tamanho_tubos.csv", 'w', newline='') as folder_csv:
-        write_csv = csv.writer(folder_csv)
+    salvar_csv(path=os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/labels", nameCsv), images_map=images_map)
+    print(f"Todas as mascaras foram analizadas.")
 
-        write_csv.writerow(['ID', 'Comprimento', 'Largura'])
-        for k, v in images_map.items():
-            if v[0] == None:
-                print(f"valor de {k} é None")
-                write_csv.writerow([k, "None", "None"])
-            else:
-                write_csv.writerow([k, v[0], v[1]])
-                temp+=1
-    print(f"Todas as mascaras foram analizadas. Total: {temp}")
-
-predict_tube("")
+predict_tube()
