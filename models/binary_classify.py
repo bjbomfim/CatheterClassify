@@ -14,9 +14,6 @@ class TubesRules(Enum):
     ETT = 1
     NGT = 2
     CVC = 3
-    
-    def __init__(self, tube_type):
-        self.tube_type = tube_type
 
     def verifyTube(self, length, width, binary_image):
         rules = {
@@ -24,8 +21,8 @@ class TubesRules(Enum):
             TubesRules.ETT: self.ett_rules,
             TubesRules.CVC: self.cvc_rules
         }
-        if self.tube_type in rules:
-            return rules[self.tube_type](length, width, binary_image)
+        if self.name in rules:
+            return rules[self.name](length, width, binary_image)
         else:
             raise ValueError("Tipo de Tubo Invalido")
 
