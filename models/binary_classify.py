@@ -48,7 +48,7 @@ class TubesRules(Enum):
 
     @staticmethod
     def ngt_rules(length, width, binary_image) -> int:
-        if length < 50:
+        if length < 67:
             return 0
         else:
             return 1
