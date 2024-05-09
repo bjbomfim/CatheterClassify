@@ -12,7 +12,7 @@ class layerTrainable(Callback):
     def on_epoch_begin(self, epoch, logs=None):
         # Epoca menor que metade da quantidade de camadas
         
-        unfreeze_count = min(epoch * 3, self.layer_lenght) if epoch > 0 else 1
+        unfreeze_count = min(epoch * 5, self.layer_lenght) if epoch > 0 else 5
         # inicia nas camadas mais profundas e a cada epoca sobe descongelando duas
         for i in range(unfreeze_count):
             layer_index = self.layer_lenght - i - 1
