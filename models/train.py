@@ -7,7 +7,7 @@ from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, CSVLogger, Mo
 from tensorflow.keras.models import load_model
 
 from . import data_generator as generator
-from .CustomCallbacks import save_data_train_results as saveResults
+from .CustomCallbacks import layer_trainable as LayerTrainable
 
 import tensorflow as tf
 
@@ -130,7 +130,7 @@ def train_with_ensemble(train_ids, val_ids, pretrained_model_path=None, return_t
         print(pretrained_model_path)
         model = sm.Unet(backbone, classes=1, activation='sigmoid')
         model.load_weights(pretrained_model_path)
-        for layer in model.layers[-50:]:
+        for layer in model.layers:
             layer.trainable = False
         print("Realizando Ensemble")
     else:
@@ -173,6 +173,7 @@ def train_with_ensemble(train_ids, val_ids, pretrained_model_path=None, return_t
                                     monitor='val_loss',
                                     save_weights_only=True,
                                     save_best_only=True)
+    layer_trainable = LayerTrainable(model)
     
     callbacks_list = [tensorboard, early_stopping, csv_logger, model_checkpoint, reduce_lr]
 

@@ -11,7 +11,7 @@ def segmentation_train(train_ids, val_ids):
 def segmentacao_ensemble(train_ids, val_ids, model_path):
     train.train_with_ensemble(train_ids=train_ids, val_ids=val_ids, pretrained_model_path=model_path)
     
-def main(model_name_train = "segmentacao"):
+def main(model_name_train = "segmentacao_Ensemble"):
     
     load_dotenv()
     # TREINO DE SEGMENTAÇÃO
