@@ -19,4 +19,12 @@ class layerTrainable(Callback):
             if not self.model.layers[layer_index].trainable:
                 self.model.layers[layer_index].trainable = True
                 print("Unfreezing layer:", self.model.layers[layer_index].name)
-        
+                
+                # Zera os pesos de algumas camadas descongeladas
+                if epoch > 3:
+                    self.zerar_pesos(self.model.layers[layer_index])
+    
+    def zerar_pesos(self, layer):
+        pesos = layer.get_weights()
+        pesos_zerados = [tf.zeros_like(w) for w in pesos]
+        layer.set_weights(pesos_zerados)
