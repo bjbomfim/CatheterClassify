@@ -173,9 +173,9 @@ def train_with_ensemble(train_ids, val_ids, pretrained_model_path=None, return_t
                                     monitor='val_loss',
                                     save_weights_only=True,
                                     save_best_only=True)
-    layer_trainable = LayerTrainable(model)
+    layer_trainable = LayerTrainable.layerTrainable(model)
     
-    callbacks_list = [tensorboard, early_stopping, csv_logger, model_checkpoint, reduce_lr]
+    callbacks_list = [tensorboard, early_stopping, csv_logger, model_checkpoint, reduce_lr, layer_trainable]
 
     print(f"Steps per epoch {len(train_generator)}")
 
