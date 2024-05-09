@@ -9,21 +9,13 @@ class layerTrainable(Callback):
         self.model = model
     
     
-    def on_epoch_begin(self, epoch, logs=None):
-        # Epoca menor que metade da quantidade de camadas
-        
-        unfreeze_count = min(epoch * 5, self.layer_lenght) if epoch > 0 else 5
-        # inicia nas camadas mais profundas e a cada epoca sobe descongelando duas
-        for i in range(unfreeze_count):
+    def on_train_begin(self, logs=None):
+        for i in range(5):
             layer_index = self.layer_lenght - i - 1
             if not self.model.layers[layer_index].trainable:
-                self.model.layers[layer_index].trainable = True
-                print("Unfreezing layer:", self.model.layers[layer_index].name)
-                
-                # Zera os pesos de algumas camadas descongeladas
-                if epoch > 3:
-                    self.zerar_pesos(self.model.layers[layer_index])
-    
+                self.zerar_pesos(self.model.layers[layer_index])
+                print("Zerando a camada: ", self.model.layers[layer_index].name)
+        
     def zerar_pesos(self, layer):
         pesos = layer.get_weights()
         pesos_zerados = [tf.zeros_like(w) for w in pesos]
