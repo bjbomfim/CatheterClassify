@@ -56,6 +56,12 @@ for k, v in map_csv.items():
         map_id[tube_position3].append(k)
     else:
         map_id['2Tipos'].append(k)
+
+print(f"Qtd separados tubo {tube_position1}: {len(map_id[tube_position1])}")
+print(f"Qtd separados tubo {tube_position2}: {len(map_id[tube_position2])}")
+print(f"Qtd separados tubo {tube_position3}: {len(map_id[tube_position3])}")
+print(f"Qtd separados tubo : {len(map_id['2Tipos'])}")
+print(f"Qtd separados tubo 3Tipos: {len(map_id['3Tipos'])}")
         
 def geraListaTubes(map_id, tube_position):
     random.shuffle(map_id[tube_position])
