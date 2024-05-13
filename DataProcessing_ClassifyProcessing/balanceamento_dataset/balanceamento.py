@@ -65,9 +65,9 @@ print(f"Qtd separados tubo 2Tipos: {len(map_id['2Tipos'])}")
 print(f"Qtd separados tubo 3Tipos: {len(map_id['3Tipos'])}")
 print("----------------------------------------------------------------")
         
-def geraListaTubes(map_id, tube_position):
+def geraListaTubes(map_id, tube_position, percent = 1.0):
     random.shuffle(map_id[tube_position])
-    lista_tube_position = map_id[tube_position][:int(len(map_id[tube_position])*0.6)]
+    lista_tube_position = map_id[tube_position][:int(len(map_id[tube_position])*percent)]
     return lista_tube_position
 
 def geraListIds60(lista_tube_position, list_ids):
@@ -81,10 +81,10 @@ def geraListIds40(lista_tube_position, list_ids1, list_ids2):
 
     return list_ids1, list_ids2
 
-lista_tube_position1 = geraListaTubes(map_id, tube_position1)
-lista_tube_position2 = geraListaTubes(map_id, tube_position2)
-lista_tube_position3 = geraListaTubes(map_id, tube_position3)
-lista_tube_2tipos = geraListaTubes(map_id, '2Tipos')
+lista_tube_position1 = geraListaTubes(map_id, tube_position1, 0.6)
+lista_tube_position2 = geraListaTubes(map_id, tube_position2, 0.7)
+lista_tube_position3 = geraListaTubes(map_id, tube_position3, 0.75)
+lista_tube_2tipos = geraListaTubes(map_id, '2Tipos', 0.7)
 lista_tube_3tipos = geraListaTubes(map_id, '3Tipos')
 
 print("----------------------------------------------------------------")
@@ -120,7 +120,9 @@ list_ids_test, list_ids_validation = geraListIds40(lista_tube_3tipos, list_ids_t
 
 
 print(f"Lista treino {len(list_ids_train)}, lista teste {len(list_ids_test)}, lista validacao {len(list_ids_validation)}")
-
+print("Iniciando train Csv")
 generate_csv(path_csv_write+path_csv_train, tube_position1, tube_position2, tube_position3, list_ids_train, map_id)
+print("Iniciando test Csv")
 generate_csv(path_csv_write+path_csv_test, tube_position1, tube_position2, tube_position3, list_ids_test, map_id)
+print("Iniciando validation Csv")
 generate_csv(path_csv_write+path_csv_validation, tube_position1, tube_position2, tube_position3, list_ids_test, map_id)
