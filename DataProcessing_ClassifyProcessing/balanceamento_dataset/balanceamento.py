@@ -119,7 +119,7 @@ list_ids_test, list_ids_validation = geraListIds40(lista_tube_2tipos, list_ids_t
 list_ids_test, list_ids_validation = geraListIds40(lista_tube_3tipos, list_ids_test, list_ids_validation)
 
 
-print(f"Lista treino {len(list_ids_train)}, lista teste{len(list_ids_test)}, lista validacao {len(list_ids_validation)}")
+print(f"Lista treino {len(list_ids_train)}, lista teste {len(list_ids_test)}, lista validacao {len(list_ids_validation)}")
 
 generate_csv(path_csv_write+path_csv_train, tube_position1, tube_position2, tube_position3, list_ids_train, map_id)
 generate_csv(path_csv_write+path_csv_test, tube_position1, tube_position2, tube_position3, list_ids_test, map_id)
