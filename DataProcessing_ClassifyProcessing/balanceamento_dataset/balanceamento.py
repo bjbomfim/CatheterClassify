@@ -70,16 +70,15 @@ def geraListaTubes(map_id, tube_position, percent = 1.0):
     lista_tube_position = map_id[tube_position][:int(len(map_id[tube_position])*percent)]
     return lista_tube_position
 
-def geraListIds60(lista_tube_position, list_ids):
-    list_ids.extend(lista_tube_position[:int(len(lista_tube_position)*0.6)])
-    return list_ids
-
-def geraListIds40(lista_tube_position, list_ids1, list_ids2):
-    temp = lista_tube_position[int(len(lista_tube_position1)*0.6):]
+def geraListIds(lista_tube_position, list_ids, list_ids1, list_ids2):
+    percent = int(len(lista_tube_position)*0.6)
+    # 60%
+    list_ids.extend(lista_tube_position[:percent])
+    # 40%
+    temp = lista_tube_position[percent:]
     list_ids1.extend(temp[int(len(temp)*0.5):])
     list_ids2.extend(temp[:int(len(temp)*0.5)])
-
-    return list_ids1, list_ids2
+    return list_ids, list_ids1, list_ids2
 
 lista_tube_position1 = geraListaTubes(map_id, tube_position1, 0.6)
 lista_tube_position2 = geraListaTubes(map_id, tube_position2, 0.7)
@@ -106,18 +105,11 @@ list_ids_test = []
 list_ids_validation = []
 
 # Balincing datasets
-list_ids_train = geraListIds60(lista_tube_position1, list_ids_train)
-list_ids_train = geraListIds60(lista_tube_position2, list_ids_train)
-list_ids_train = geraListIds60(lista_tube_position3, list_ids_train)
-list_ids_train = geraListIds60(lista_tube_2tipos, list_ids_train)
-list_ids_train = geraListIds60(lista_tube_3tipos, list_ids_train)
-# ----------------------------------------------------------------
-list_ids_test, list_ids_validation = geraListIds40(lista_tube_position1, list_ids_test, list_ids_validation)
-list_ids_test, list_ids_validation = geraListIds40(lista_tube_position2, list_ids_test, list_ids_validation)
-list_ids_test, list_ids_validation = geraListIds40(lista_tube_position3, list_ids_test, list_ids_validation)
-list_ids_test, list_ids_validation = geraListIds40(lista_tube_2tipos, list_ids_test, list_ids_validation)
-list_ids_test, list_ids_validation = geraListIds40(lista_tube_3tipos, list_ids_test, list_ids_validation)
-
+list_ids_train, list_ids_test, list_ids_validation = geraListIds(lista_tube_position1, list_ids_train, list_ids_test, list_ids_validation)
+list_ids_train, list_ids_test, list_ids_validation = geraListIds(lista_tube_position2, list_ids_train, list_ids_test, list_ids_validation)
+list_ids_train, list_ids_test, list_ids_validation = geraListIds(lista_tube_position3, list_ids_train, list_ids_test, list_ids_validation)
+list_ids_train, list_ids_test, list_ids_validation = geraListIds(lista_tube_2tipos, list_ids_train, list_ids_test, list_ids_validation)
+list_ids_train, list_ids_test, list_ids_validation = geraListIds(lista_tube_3tipos, list_ids_train, list_ids_test, list_ids_validation)
 
 print(f"Lista treino {len(list_ids_train)}, lista teste {len(list_ids_test)}, lista validacao {len(list_ids_validation)}")
 print("Iniciando train Csv")
