@@ -57,11 +57,13 @@ for k, v in map_csv.items():
     else:
         map_id['2Tipos'].append(k)
 
+print("----------------------------------------------------------------")
 print(f"Qtd separados tubo {tube_position1}: {len(map_id[tube_position1])}")
 print(f"Qtd separados tubo {tube_position2}: {len(map_id[tube_position2])}")
 print(f"Qtd separados tubo {tube_position3}: {len(map_id[tube_position3])}")
-print(f"Qtd separados tubo : {len(map_id['2Tipos'])}")
+print(f"Qtd separados tubo 2Tipos: {len(map_id['2Tipos'])}")
 print(f"Qtd separados tubo 3Tipos: {len(map_id['3Tipos'])}")
+print("----------------------------------------------------------------")
         
 def geraListaTubes(map_id, tube_position):
     random.shuffle(map_id[tube_position])
@@ -85,11 +87,13 @@ lista_tube_position3 = geraListaTubes(map_id, tube_position3)
 lista_tube_2tipos = geraListaTubes(map_id, '2Tipos')
 lista_tube_3tipos = geraListaTubes(map_id, '3Tipos')
 
-print(f"Quantidade do tubo posicao {tube_position1}: total = {len(tube_position1)} ;  60% {int(len(tube_position1)*0.6)}")
-print(f"Quantidade do tubo posicao {tube_position2}: total = {len(tube_position2)} ;  60% {int(len(tube_position2)*0.6)}")
-print(f"Quantidade do tubo posicao {tube_position3}: total = {len(tube_position3)} ;  60% {int(len(tube_position3)*0.6)}")
+print("----------------------------------------------------------------")
+print(f"Quantidade do tubo posicao {tube_position1}: total = {len(lista_tube_position1)} ;  60% {int(len(lista_tube_position1)*0.6)}")
+print(f"Quantidade do tubo posicao {tube_position2}: total = {len(lista_tube_position2)} ;  60% {int(len(lista_tube_position2)*0.6)}")
+print(f"Quantidade do tubo posicao {tube_position3}: total = {len(lista_tube_position3)} ;  60% {int(len(lista_tube_position3)*0.6)}")
 print(f"Quantidade do tubo com 2 tipos: total = {len(lista_tube_2tipos)} ;  60% {int(len(lista_tube_2tipos)*0.6)}")
 print(f"Quantidade do tubo com 3 tipos: total = {len(lista_tube_3tipos)} ;  60% {int(len(lista_tube_3tipos)*0.6)}")
+print("----------------------------------------------------------------")
 
 random.shuffle(lista_tube_position1)
 random.shuffle(lista_tube_position2)
