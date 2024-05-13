@@ -113,11 +113,9 @@ list_ids_train, list_ids_test, list_ids_validation = geraListIds(lista_tube_3tip
 
 print(f"Lista treino {len(list_ids_train)}, lista teste {len(list_ids_test)}, lista validacao {len(list_ids_validation)}")
 print("Iniciando train Csv")
-#generate_csv(path_csv_write+path_csv_train, tube_position1, tube_position2, tube_position3, list_ids_train, map_csv)
+generate_csv(path_csv_write+path_csv_train, tube_position1, tube_position2, tube_position3, list_ids_train, map_csv)
 print("Iniciando test Csv")
-#generate_csv(path_csv_write+path_csv_test, tube_position1, tube_position2, tube_position3, list_ids_test, map_csv)
+generate_csv(path_csv_write+path_csv_test, tube_position1, tube_position2, tube_position3, list_ids_test, map_csv)
 print("Iniciando validation Csv")
-#generate_csv(path_csv_write+path_csv_validation, tube_position1, tube_position2, tube_position3, list_ids_test, map_csv)
+generate_csv(path_csv_write+path_csv_validation, tube_position1, tube_position2, tube_position3, list_ids_test, map_csv)
 
-for i in range(0,10):
-    print(list_ids_train[i], map_csv[list_ids_train[i]][tube_position1], map_csv[list_ids_train[i]][tube_position2], map_csv[list_ids_train[i]][tube_position3])
