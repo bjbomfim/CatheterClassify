@@ -83,8 +83,8 @@ def geraListIds40(lista_tube_position, list_ids1, list_ids2):
 
 lista_tube_position1 = geraListaTubes(map_id, tube_position1, 0.6)
 lista_tube_position2 = geraListaTubes(map_id, tube_position2, 0.7)
-lista_tube_position3 = geraListaTubes(map_id, tube_position3, 0.75)
-lista_tube_2tipos = geraListaTubes(map_id, '2Tipos', 0.7)
+lista_tube_position3 = geraListaTubes(map_id, tube_position3, 0.85)
+lista_tube_2tipos = geraListaTubes(map_id, '2Tipos', 0.75)
 lista_tube_3tipos = geraListaTubes(map_id, '3Tipos')
 
 print("----------------------------------------------------------------")
