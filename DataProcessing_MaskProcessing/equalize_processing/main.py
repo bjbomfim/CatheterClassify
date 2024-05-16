@@ -26,12 +26,12 @@ def load_images(images_data):
             images.append(ImageTuple(row[1], image))
     return images
 
-def read_csv(path):
+def read_csv(path, savepath):
     print("Reading images")
     
     images_data = []
     
-    image_equalizad = [os.path.splitext(i)[0] for i in os.listdir("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing")]
+    image_equalizad = [os.path.splitext(i)[0] for i in os.listdir(savepath)]
     
     with open(path, "r") as csv_file:
         read = csv.DictReader(csv_file)
@@ -58,7 +58,7 @@ def main():
     
     print(f"Args received: path: {path} ")
     
-    images_data = read_csv(path)
+    images_data = read_csv(path, pathSaveImages)
     
     elemento_inicial_do_resto = (len(images_data)//100) * 100
     elemento_final = elemento_inicial_do_resto+(len(images_data)%100)
