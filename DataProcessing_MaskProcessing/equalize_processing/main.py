@@ -49,6 +49,7 @@ def main():
     
     parser = argparse.ArgumentParser(description=" Histogram Equalization.")
     parser.add_argument("-csvDataPath", required=True, type=str)
+    parser.add_argument("-saveImagesPath", required=True, type=str)
     
     args = parser.parse_args()
     
