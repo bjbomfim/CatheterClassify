@@ -53,6 +53,7 @@ def main():
     args = parser.parse_args()
     
     path = args.csvDataPath
+    pathSaveImages = args.saveImagesPath
     
     print(f"Args received: path: {path} ")
     
@@ -70,13 +71,13 @@ def main():
             # save_images(processed_images_equalized, path_to_save_equalized)
             
             processed_images_CLAHE = pre_processing(images, 2)
-            save_images(processed_images_CLAHE)
+            save_images(processed_images_CLAHE, pathSaveImages)
     
     if len(images_data) % 100 != 0: 
         print(f"Group: {elemento_final}")
         images = load_images(images_data[elemento_inicial_do_resto:elemento_final])
 
         processed_images_CLAHE = pre_processing(images, 2)
-        save_images(processed_images_CLAHE)
+        save_images(processed_images_CLAHE, pathSaveImages)
 
 main()
