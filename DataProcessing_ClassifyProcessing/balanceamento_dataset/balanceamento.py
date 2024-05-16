@@ -117,5 +117,5 @@ generate_csv(path_csv_write+path_csv_train, tube_position1, tube_position2, tube
 print("Iniciando test Csv")
 generate_csv(path_csv_write+path_csv_test, tube_position1, tube_position2, tube_position3, list_ids_test, map_csv)
 print("Iniciando validation Csv")
-generate_csv(path_csv_write+path_csv_validation, tube_position1, tube_position2, tube_position3, list_ids_test, map_csv)
+generate_csv(path_csv_write+path_csv_validation, tube_position1, tube_position2, tube_position3, list_ids_validation, map_csv)
 
