@@ -5,7 +5,7 @@ from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoi
 from tensorflow.keras import optimizers
 from tensorflow.keras.metrics import AUC, Precision, Recall
 from .data_generator import DataGeneratorClassify
-from .models.classify_model import build_classification_model
+from .classify_model import build_classification_model
 
 def train(train_df, val_df):
     # Criação do diretório de logs
