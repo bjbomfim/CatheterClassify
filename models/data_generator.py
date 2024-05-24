@@ -62,3 +62,43 @@ class DataGenerator(Sequence):
 
         return np.array(X), np.array(Y)
 
+class DataGeneratorClassify(Sequence):
+    def __init__(self, dataframe, batch_size=4, image_size=(384, 384), shuffle=True):
+        self.dataframe = dataframe
+        self.batch_size = batch_size
+        self.image_size = image_size
+        self.shuffle = shuffle
+        self.indexes = np.arange(len(self.dataframe))
+        self.on_epoch_end()
+
+    def __len__(self):
+        return int(np.ceil(len(self.dataframe) / self.batch_size))
+
+    def on_epoch_end(self):
+        if self.shuffle:
+            np.random.shuffle(self.indexes)
+
+    def __getitem__(self, index):
+        indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
+        batch_data = [self.dataframe.iloc[k] for k in indexes]
+
+        X = []
+        y = []
+
+        for data in batch_data:
+            img_path = data['Path_Arquivo']
+            labels = data[['CVC - Normal', 'CVC - Borderline', 'CVC - Abnormal']].values
+
+            # Load image
+            img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+            img = cv2.resize(img, self.image_size)
+            img = img / 255.0  # Normalize to [0, 1]
+
+            X.append(img)
+            y.append(labels)
+
+        X = np.expand_dims(np.array(X), axis=-1)
+        y = np.array(y)
+
+        return X, y
+
