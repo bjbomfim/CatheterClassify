@@ -10,7 +10,7 @@ def build_classification_model(input_shape):
     base_model = tf.keras.applications.ResNet50(
         weights='imagenet',
         include_top=False,
-        input_shape=input_shape
+        input_shape=expanded_input
     )
 
     x = base_model.output
