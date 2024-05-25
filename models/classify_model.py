@@ -23,7 +23,7 @@ def build_classification_model(input_shape):
 
     return model
 
-def build_classification_model(image_shape, mask_shape):
+def build_classification_model2(image_shape, mask_shape):
 
     image_input = Input(shape=image_shape, name='image_input')
     base_model_image = tf.keras.applications.ResNet50(
