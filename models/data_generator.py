@@ -131,8 +131,8 @@ class DataGeneratorClassifyTwoInputs(Sequence):
         y = []
 
         for data in batch_data:
-            img_path = data['Path_Arquivo']
-            mask_path = data['Path_Mascara'] 
+            img_path = os.path.join("/content/xrays/train_imagens/ClassifyPreProcessing/", data['ID']+'.jpg')
+            mask_path = data['Path_Arquivo']
             labels = data[['CVC - Normal', 'CVC - Borderline', 'CVC - Abnormal']].values
 
             # Carregar imagem de raio-X

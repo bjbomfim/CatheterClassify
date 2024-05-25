@@ -4,10 +4,10 @@ import pandas as pd
 from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint, CSVLogger, ReduceLROnPlateau
 from tensorflow.keras import optimizers
 from tensorflow.keras.metrics import AUC, Precision, Recall
-from .data_generator import DataGeneratorClassify
-from .classify_model import build_classification_model
+from .data_generator import DataGeneratorClassify, DataGeneratorClassifyTwoInputs
+from .classify_model import build_classification_model, build_classification_model2
 
-def train(train_df, val_df):
+def train(train_df, val_df, multi_input = False):
     # Criação do diretório de logs
     current_time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%p")
     log_dir = os.path.join(os.environ["RESULT_TRAIN_PATH"], current_time)
@@ -24,10 +24,17 @@ def train(train_df, val_df):
     # Criação dos DataGenerators
     train_generator = DataGeneratorClassify(train_df, batch_size=batch_size, image_size=image_size)
     val_generator = DataGeneratorClassify(val_df, batch_size=batch_size, image_size=image_size)
-
+    if multi_input:
+        train_generator = DataGeneratorClassifyTwoInputs(train_df, batch_size=batch_size, image_size=image_size)
+        val_generator = DataGeneratorClassifyTwoInputs(val_df, batch_size=batch_size, image_size=image_size)
+    
     # Construção do modelo
     input_shape = (image_size[0], image_size[1], 3)
     model = build_classification_model(input_shape)
+    
+    if multi_input:
+        image_shape = (image_size[0], image_size[1], 3)
+        model = build_classification_model2(image_shape, input_shape)
 
     model.compile(
         optimizer=optimizers.Adam(learning_rate=1e-4),
