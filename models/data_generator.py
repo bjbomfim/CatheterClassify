@@ -93,8 +93,8 @@ class DataGeneratorClassify(Sequence):
             img = cv2.imread(img_path)
             img = np.squeeze(img)
             img = cv2.resize(img, (self.image_size[1], self.image_size[0]))
-            img = img.astype(np.float32)
-            img /= 255.0  # Normalize to [0, 1]
+            
+            img = img / 255.0  # Normalize to [0, 1]
 
             X.append(img)
             y.append(labels.astype(np.float32))

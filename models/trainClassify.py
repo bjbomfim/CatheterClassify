@@ -26,7 +26,7 @@ def train(train_df, val_df):
     val_generator = DataGeneratorClassify(val_df, batch_size=batch_size, image_size=image_size)
 
     # Construção do modelo
-    input_shape = (image_size[0], image_size[1], 3)
+    input_shape = (image_size[0], image_size[1], 1)
     model = build_classification_model(input_shape)
 
     model.compile(
