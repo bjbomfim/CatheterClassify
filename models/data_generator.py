@@ -101,7 +101,7 @@ class DataGeneratorClassify(Sequence):
             X.append(rgb_img)
             y.append(labels.astype(np.float32))
 
-        X = np.expand_dims(np.array(X), axis=-1)
+        X = np.array(X)
         y = np.array(y)
 
         return X, y
