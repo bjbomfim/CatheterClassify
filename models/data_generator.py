@@ -91,11 +91,14 @@ class DataGeneratorClassify(Sequence):
 
             # Load image
             img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
-            img = cv2.resize(img, (self.image_size[1], self.image_size[0]))
-            img = img.astype(np.float32)
-            img = img / 255.0  # Normalize to [0, 1]
+            
+            # Transforma para RGB
+            rgb_img = np.repeat(img[..., np.newaxis], 3, -1)
+            
+            rgb_img = cv2.resize(rgb_img, (self.image_size[1], self.image_size[0]))
+            rgb_img = rgb_img.astype(np.float32) / 255.0
 
-            X.append(img)
+            X.append(rgb_img)
             y.append(labels.astype(np.float32))
 
         X = np.expand_dims(np.array(X), axis=-1)
