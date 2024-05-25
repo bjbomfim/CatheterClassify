@@ -106,3 +106,52 @@ class DataGeneratorClassify(Sequence):
 
         return X, y
 
+class DataGeneratorClassifyTwoInputs(Sequence):
+    def __init__(self, dataframe, batch_size=4, image_size=(384, 384), shuffle=True):
+        self.dataframe = dataframe
+        self.batch_size = batch_size
+        self.image_size = image_size
+        self.shuffle = shuffle
+        self.indexes = np.arange(len(self.dataframe))
+        self.on_epoch_end()
+
+    def __len__(self):
+        return int(np.ceil(len(self.dataframe) / self.batch_size))
+
+    def on_epoch_end(self):
+        if self.shuffle:
+            np.random.shuffle(self.indexes)
+
+    def __getitem__(self, index):
+        indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
+        batch_data = [self.dataframe.iloc[k] for k in indexes]
+
+        X_images = []
+        X_masks = []
+        y = []
+
+        for data in batch_data:
+            img_path = data['Path_Arquivo']
+            mask_path = data['Path_Mascara'] 
+            labels = data[['CVC - Normal', 'CVC - Borderline', 'CVC - Abnormal']].values
+
+            # Carregar imagem de raio-X
+            img = cv2.imread(img_path)
+            img = cv2.resize(img, (self.image_size[1], self.image_size[0]))
+            img = img / 255.0
+
+            # Carregar máscara de segmentação
+            mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
+            mask = cv2.resize(mask, (self.image_size[1], self.image_size[0]))
+            mask = mask.astype(np.float32) / 255.0
+            mask = np.expand_dims(mask, axis=-1)  # Adiciona uma dimensão para máscaras
+
+            X_images.append(img)
+            X_masks.append(mask)
+            y.append(labels.astype(np.float32))
+
+        X_images = np.array(X_images)
+        X_masks = np.array(X_masks)
+        y = np.array(y)
+
+        return [X_images, X_masks], y
