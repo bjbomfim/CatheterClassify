@@ -19,7 +19,7 @@ def build_classification_model(input_shape):
     model = models.Model(inputs=base_model.input, outputs=predictions)
 
     for layer in base_model.layers:
-        layer.trainable = True
+        layer.trainable = False
 
     return model
 

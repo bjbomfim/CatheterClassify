@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 
 from tensorflow.keras.utils import Sequence
+import albumentations as A
 
 class DataGenerator(Sequence):
     def __init__(self,
@@ -12,7 +13,8 @@ class DataGenerator(Sequence):
                 batch_size=4,
                 image_size=(384, 384),
                 shuffle=True,
-                output_path="/content/output"):
+                output_path="/content/output",
+                augment=False):
         
         self.list_IDs = list_IDs
         self.model = model
@@ -22,6 +24,22 @@ class DataGenerator(Sequence):
         self.indexes = list_IDs.copy()
         self.output_path = output_path
         self.num_epoch = 1
+        self.augment = augment
+        if self.augment:
+            self.augmenter = A.Compose([
+                A.HorizontalFlip(p=0.5),
+                A.VerticalFlip(p=0.5),
+                A.RandomRotate90(p=0.5),
+                A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, rotate_limit=45, p=0.5),
+                A.OneOf([
+                    A.CLAHE(clip_limit=2),
+                    A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2),
+                ], p=0.5),
+                A.OneOf([
+                    A.GaussNoise(),
+                    A.GaussianBlur(),
+                ], p=0.5),
+            ])
     
     def __len__(self):
         return int(np.ceil(len(self.list_IDs) / self.batch_size))
@@ -53,6 +71,11 @@ class DataGenerator(Sequence):
                 
                 mask = self.resize_image(mask)
                 mask = self.normalize_image(mask)
+
+                if self.augment:
+                    augmented = self.augmenter(image=img, mask=mask)
+                    img = augmented['image']
+                    mask = augmented['mask']
 
                 I.append(idx[0])
                 X.append(img)

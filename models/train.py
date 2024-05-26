@@ -71,14 +71,16 @@ def train(train_ids, val_ids, return_train_path = None):
         train_ids,
         model,
         batch_size=batch_size,
-        image_size=image_size
+        image_size=image_size,
+        augment=True
     )
     
     val_generator = generator.DataGenerator(
         val_ids,
         model,
         batch_size=batch_size,
-        image_size=image_size
+        image_size=image_size,
+        augment=False
     )
     
     
