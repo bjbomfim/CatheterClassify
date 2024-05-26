@@ -45,6 +45,7 @@ with open(path_csv_read,'r') as folder_csv:
 
 print(f"Qtd: {len(map_csv)}")
 # Separation of the tubes.
+listaTubo2 = []
 for k, v in map_csv.items():
     if v[tube_position1] == '1' and v[tube_position2] == '1' and v[tube_position3] == '1':
         map_id['3Tipos'].append(k)
@@ -55,61 +56,47 @@ for k, v in map_csv.items():
     elif v[tube_position1] == '0' and v[tube_position2] == '0' and v[tube_position3] == '1':
         map_id[tube_position3].append(k)
     else:
-        map_id['2Tipos'].append(k)
+        if (v[tube_position2] == '1' and v[tube_position3] == '1') or v[tube_position1] == '1' and v[tube_position3] == '1':
+            listaTubo2.append(k)
+        else:
+            map_id['2Tipos'].append(k)
 
 print("----------------------------------------------------------------")
 print(f"Qtd separados tubo {tube_position1}: {len(map_id[tube_position1])}")
 print(f"Qtd separados tubo {tube_position2}: {len(map_id[tube_position2])}")
 print(f"Qtd separados tubo {tube_position3}: {len(map_id[tube_position3])}")
-print(f"Qtd separados tubo 2Tipos: {len(map_id['2Tipos'])}")
+print(f"Qtd separados tubo 2Tipos Normal e Borderline: {len(map_id['2Tipos'])}")
+print(f"Qtd separados tubo 2Tipos abnormal e outros: {len(listaTubo2)}")
 print(f"Qtd separados tubo 3Tipos: {len(map_id['3Tipos'])}")
 print("----------------------------------------------------------------")
         
-def geraListaTubes(map_id, tube_position, percent = 1.0):
-    random.shuffle(map_id[tube_position])
-    lista_tube_position = map_id[tube_position][:int(len(map_id[tube_position])*percent)]
-    return lista_tube_position
-
-def geraListIds(lista_tube_position, list_ids, list_ids1, list_ids2):
-    percent = int(len(lista_tube_position)*0.6)
-    # 60%
-    list_ids.extend(lista_tube_position[:percent])
-    # 40%
-    temp = lista_tube_position[percent:]
-    list_ids1.extend(temp[int(len(temp)*0.5):])
-    list_ids2.extend(temp[:int(len(temp)*0.5)])
-    return list_ids, list_ids1, list_ids2
-
-lista_tube_position1 = geraListaTubes(map_id, tube_position1, 0.6)
-lista_tube_position2 = geraListaTubes(map_id, tube_position2, 0.7)
-lista_tube_position3 = geraListaTubes(map_id, tube_position3, 0.85)
-lista_tube_2tipos = geraListaTubes(map_id, '2Tipos', 0.75)
-lista_tube_3tipos = geraListaTubes(map_id, '3Tipos')
-
-print("----------------------------------------------------------------")
-print(f"Quantidade do tubo posicao {tube_position1}: total = {len(lista_tube_position1)} ;  60% {int(len(lista_tube_position1)*0.6)}")
-print(f"Quantidade do tubo posicao {tube_position2}: total = {len(lista_tube_position2)} ;  60% {int(len(lista_tube_position2)*0.6)}")
-print(f"Quantidade do tubo posicao {tube_position3}: total = {len(lista_tube_position3)} ;  60% {int(len(lista_tube_position3)*0.6)}")
-print(f"Quantidade do tubo com 2 tipos: total = {len(lista_tube_2tipos)} ;  60% {int(len(lista_tube_2tipos)*0.6)}")
-print(f"Quantidade do tubo com 3 tipos: total = {len(lista_tube_3tipos)} ;  60% {int(len(lista_tube_3tipos)*0.6)}")
-print("----------------------------------------------------------------")
-
-random.shuffle(lista_tube_position1)
-random.shuffle(lista_tube_position2)
-random.shuffle(lista_tube_position3)
-random.shuffle(lista_tube_2tipos)
-random.shuffle(lista_tube_3tipos)
+        
+def cvcGeraLista(lista, trainList, testList, valiList):
+    random.shuffle(lista)
+    trainList.extend(lista[:int(len(lista)*0.6)])
+    temp = lista[int(len(lista)*0.6):]
+    
+    random.shuffle(temp)
+    testList.extend(temp[int(len(temp)*0.5):])
+    valiList.extend(temp[:int(len(temp)*0.5)])
+    return trainList, testList, valiList
 
 list_ids_train = []
 list_ids_test = []
 list_ids_validation = []
 
-# Balincing datasets
-list_ids_train, list_ids_test, list_ids_validation = geraListIds(lista_tube_position1, list_ids_train, list_ids_test, list_ids_validation)
-list_ids_train, list_ids_test, list_ids_validation = geraListIds(lista_tube_position2, list_ids_train, list_ids_test, list_ids_validation)
-list_ids_train, list_ids_test, list_ids_validation = geraListIds(lista_tube_position3, list_ids_train, list_ids_test, list_ids_validation)
-list_ids_train, list_ids_test, list_ids_validation = geraListIds(lista_tube_2tipos, list_ids_train, list_ids_test, list_ids_validation)
-list_ids_train, list_ids_test, list_ids_validation = geraListIds(lista_tube_3tipos, list_ids_train, list_ids_test, list_ids_validation)
+random.shuffle(map_id[tube_position1])
+random.shuffle(map_id[tube_position2])
+random.shuffle(map_id[tube_position3])
+random.shuffle(map_id['2Tipos'])
+
+list_ids_train, list_ids_test, list_ids_validation, cvcGeraLista(map_id[tube_position1][0:5000], list_ids_train, list_ids_test, list_ids_validation)
+list_ids_train, list_ids_test, list_ids_validation, cvcGeraLista(map_id[tube_position2][0:5000], list_ids_train, list_ids_test, list_ids_validation)
+list_ids_train, list_ids_test, list_ids_validation, cvcGeraLista(map_id[tube_position3][0:2156], list_ids_train, list_ids_test, list_ids_validation)
+list_ids_train, list_ids_test, list_ids_validation, cvcGeraLista(map_id['3Tipos'][0:71], list_ids_train, list_ids_test, list_ids_validation)
+list_ids_train, list_ids_test, list_ids_validation, cvcGeraLista(map_id['2Tipos'][0:2300], list_ids_train, list_ids_test, list_ids_validation)
+list_ids_train, list_ids_test, list_ids_validation, cvcGeraLista(listaTubo2, list_ids_train, list_ids_test, list_ids_validation)
+
 
 print(f"Lista treino {len(list_ids_train)}, lista teste {len(list_ids_test)}, lista validacao {len(list_ids_validation)}")
 print("Iniciando train Csv")
