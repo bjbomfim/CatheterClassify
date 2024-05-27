@@ -14,7 +14,7 @@ def segmentacao_ensemble(train_ids, val_ids, model_path):
     train.train_with_ensemble(train_ids=train_ids, val_ids=val_ids, pretrained_model_path=model_path)
 
 def classify_train(train_ids, val_ids):
-    trainClassify.train(train_ids, val_ids, False)
+    trainClassify.train(train_ids, val_ids, True)
 
 def main(model_name_train = "classify"):
     
