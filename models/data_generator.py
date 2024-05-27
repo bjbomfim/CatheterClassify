@@ -165,9 +165,9 @@ class DataGeneratorClassifyTwoInputs(Sequence):
 
             # Carregar máscara de segmentação
             mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
+            mask = np.repeat(mask[..., np.newaxis], 3, -1)
             mask = cv2.resize(mask, (self.image_size[1], self.image_size[0]))
             mask = mask.astype(np.float32) / 255.0
-            mask = np.expand_dims(mask, axis=-1)  # Adiciona uma dimensão para máscaras
 
             X_images.append(img)
             X_masks.append(mask)
