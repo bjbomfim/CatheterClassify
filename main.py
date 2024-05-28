@@ -8,7 +8,7 @@ from .models import trainClassify
 import pandas as pd
 
 def segmentation_train(train_ids, val_ids):
-    train.train(train_ids=train_ids, val_ids=val_ids)
+    train.train(train_ids=train_ids, val_ids=val_ids, return_train_path="/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults/bestsmodels")
 
 def segmentacao_ensemble(train_ids, val_ids, model_path):
     train.train_with_ensemble(train_ids=train_ids, val_ids=val_ids, pretrained_model_path=model_path)
