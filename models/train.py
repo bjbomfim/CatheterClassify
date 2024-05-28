@@ -34,6 +34,7 @@ def train(train_ids, val_ids, return_train_path = None):
     sm.set_framework('tf.keras')
     sm.framework()
     
+    print("Criando o path result")
     # criation log_folder 
     current_time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%p")
     results_dir = os.environ["RESULT_TRAIN_PATH"]+current_time
@@ -46,6 +47,7 @@ def train(train_ids, val_ids, return_train_path = None):
     batch_size = int(os.environ["BATCH_SIZE"])
     image_size = (int(os.environ["IMAGE_SIZE"]), int(os.environ["IMAGE_SIZE"]))
     
+    print("Criando a model")
     # Criando Modelo
     model = sm.Unet(backbone, classes=1, activation='sigmoid')
 
@@ -65,7 +67,7 @@ def train(train_ids, val_ids, return_train_path = None):
         loss=dice_loss,
         metrics=[intersection_over_union, sm.metrics.f1_score, sm.metrics.precision , sm.metrics.recall],
     )
-
+    print("Criando o DataGenerator")
     # Criando o DataGenerator para os dados de treino
     train_generator = generator.DataGenerator(
         train_ids,
