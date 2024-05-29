@@ -76,7 +76,10 @@ def train(train_df, val_df, return_train_path = None, multi_input = True):
     print("Criando a model")
     # Criando Modelo
     # Aqui deveria ser criado um modelo que receba duas entradas
-    model = sm.Unet(backbone, classes=1, activation='sigmoid')
+    if multi_input:
+        model = build_custom_unet()
+    else:
+        model = sm.Unet(backbone, classes=1, activation='sigmoid')
 
 
     # Verificando se irá retomar o treinamento
