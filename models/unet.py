@@ -56,7 +56,7 @@ def build_custom_unet(input_shape, decoder_filters=(256, 128, 64, 32, 16),
 
     # Redimensiona as saídas do backbone para corresponder às dimensões das saídas do decodificador
     for i, skip in enumerate(skips):
-        target_shape = (input_shape[0] // (2 ** (4-i)), input_shape[1] // (2 ** (4-i)), decoder_filters[i])
+        target_shape = (input_shape[0] // (2 ** (4-i)), input_shape[1] // (2 ** (4-i)))
         skips[i] = tf.image.resize(skip, target_shape)
 
     # Construção dos blocos do decodificador
@@ -80,3 +80,4 @@ def build_custom_unet(input_shape, decoder_filters=(256, 128, 64, 32, 16),
     model = tf.keras.Model(inputs=[input_img1, input_img2], outputs=output)
 
     return model
+
