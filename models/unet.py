@@ -37,8 +37,8 @@ def DecoderUpsamplingX2Block(filters, stage):
 def build_custom_unet(backbone, skip_connection_layers, decoder_filters=(256, 128, 64, 32, 16),
                     n_upsample_blocks=5, classes=1, activation='sigmoid'):
     # Camadas de entrada para as imagens
-    input_img1 = Input(shape=backbone.input_shape[1:], name='input_image_1')
-    input_img2 = Input(shape=backbone.input_shape[1:], name='input_image_2')
+    input_img1 = Input(shape=(None, None, 3), name='input_image_1')
+    input_img2 = Input(shape=(None, None, 3), name='input_image_2')
 
     # Passa as imagens pelo backbone
     x1 = backbone(input_img1)
