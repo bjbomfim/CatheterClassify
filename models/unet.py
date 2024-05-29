@@ -26,7 +26,7 @@ def DecoderUpsamplingX2Block(filters, stage):
 
         if skip is not None:
             skip = Conv2D(filters, kernel_size=1, padding='same', name='skip_conv')(skip)
-            skip = UpSampling2D(size=(4, 4))(skip)  # Redimensiona para as mesmas dimensões que x
+            skip = UpSampling2D(size=2 ** stage)(skip)  # Redimensiona para as mesmas dimensões que x
             x = Concatenate(name=concat_name)([x, skip])
 
         x = Conv3x3BnReLU(filters, name=conv1_name)(x)
@@ -56,8 +56,8 @@ def build_custom_unet(input_shape, decoder_filters=(256, 128, 64, 32, 16),
 
     # Redimensiona as saídas do backbone para corresponder às dimensões das saídas do decodificador
     for i, skip in enumerate(skips):
-        target_shape = (input_shape[0] // (2 ** (4-i)), input_shape[1] // (2 ** (4-i)))
-        skips[i] = tf.image.resize(skip, target_shape)
+        skip = Conv2D(decoder_filters[i], kernel_size=1, padding='same', activation='relu')(skip)
+        skips[i] = skip
 
     # Construção dos blocos do decodificador
     for i in range(n_upsample_blocks):
