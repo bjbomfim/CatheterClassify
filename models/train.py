@@ -13,8 +13,7 @@ from .unet import build_custom_unet
 import tensorflow as tf
 
 def dice_coefficient(y_true, y_pred):
-    print(y_true.shape)
-    print(y_pred.shape)
+    print()
     smooth = 1.0
     intersection = tf.reduce_sum(y_true * y_pred)
     union = tf.reduce_sum(y_true) + tf.reduce_sum(y_pred)

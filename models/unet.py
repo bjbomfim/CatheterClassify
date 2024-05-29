@@ -1,4 +1,10 @@
-from tensorflow.keras.layers import Input, Conv2D, UpSampling2D, concatenate
+import tensorflow as tf
+from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense
+from tensorflow.keras.applications import ResNet50
+from tensorflow.keras.models import Model
+
+import tensorflow as tf
+from tensorflow.keras.layers import Input, Conv2D, Conv2DTranspose, concatenate, MaxPooling2D, UpSampling2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.applications import ResNet50
 
@@ -18,10 +24,10 @@ def unet_decoder(encoder_inputs, skip_connections):
     
     return x
 
-def build_custom_unet(input_shape=(512, 512, 3)):
+def build_custom_unet():
     # Input layers
-    input1 = Input(shape=input_shape)
-    input2 = Input(shape=input_shape)
+    input1 = Input(shape=(None, None, 3))
+    input2 = Input(shape=(None, None, 3))
     
     # ResNet50 Encoder
     base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=input1)
