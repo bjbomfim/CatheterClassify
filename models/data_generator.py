@@ -161,6 +161,9 @@ class DataGeneratorTwoInputs(Sequence):
                 Y.append(mask)
             else:
                 print(f"Erro ao carregar a imagem: " + data["ID"])
+        
+        if len(X_images) == 0 or len(X_masks) == 0 or len(Y) == 0:
+            print(f"Empty batch at index {index}.")
 
         return [np.array(X_images), np.array(X_masks)], np.array(Y)
 
