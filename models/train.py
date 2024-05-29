@@ -98,8 +98,8 @@ def train(train_df, val_df, return_train_path = None, multi_input = True):
     
     model.compile(
         'Adam',
-        loss=dice_loss,
-        metrics=[iou, AUC(name='auc'), Precision(name='precision'), Recall(name='recall')],
+        loss=sm.losses.dice_loss,
+        metrics=[sm.metrics.iou_score, AUC(name='auc'), Precision(name='precision'), Recall(name='recall')],
     )
     # Callbacks
     
