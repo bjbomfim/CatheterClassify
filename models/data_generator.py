@@ -128,7 +128,7 @@ class DataGeneratorTwoInputs(Sequence):
 
         for data in batch_data:
             img_path =  os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')
-            predict_path = os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')
+            predict_path = os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults/predict2/", data['ID']+'.jpg')
             mask_path = os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')
             # Load image
             img = cv2.imread(img_path)
@@ -160,7 +160,7 @@ class DataGeneratorTwoInputs(Sequence):
                 X_masks.append(predict)
                 Y.append(mask)
             else:
-                print(f"Erro ao carregar a imagem: ")
+                print(f"Erro ao carregar a imagem: " + data["ID"])
 
         return [np.array(X_images), np.array(X_masks)], np.array(Y)
 
