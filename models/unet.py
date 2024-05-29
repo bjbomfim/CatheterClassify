@@ -1,5 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Input, Conv2D, UpSampling2D, Concatenate
+from tensorflow.keras.applications import ResNet50
 
 def Conv3x3BnReLU(filters, name=None):
     def wrapper(input_tensor):
@@ -34,19 +35,23 @@ def DecoderUpsamplingX2Block(filters, stage):
 
     return wrapper
 
-def build_custom_unet(backbone, skip_connection_layers, decoder_filters=(256, 128, 64, 32, 16),
+def build_custom_unet(input_shape, decoder_filters=(256, 128, 64, 32, 16),
                     n_upsample_blocks=5, classes=1, activation='sigmoid'):
     # Camadas de entrada para as imagens
-    input_img1 = Input(shape=(None, None, 3), name='input_image_1')
-    input_img2 = Input(shape=(None, None, 3), name='input_image_2')
+    input_img1 = Input(shape=input_shape, name='input_image_1')
+    input_img2 = Input(shape=input_shape, name='input_image_2')
+
+    # Criação do Backbone
+    backbone = ResNet50(weights='imagenet', include_top=False, input_shape=input_shape)
+    # Congela as camadas do backbone para evitar o treinamento
+    backbone.trainable = False
 
     # Passa as imagens pelo backbone
     x1 = backbone(input_img1)
     x2 = backbone(input_img2)
 
     # Extrai as conexões de skip do backbone
-    skips = [backbone.get_layer(name=i).output if isinstance(i, str)
-            else backbone.get_layer(index=i).output for i in skip_connection_layers]
+    skips = [backbone.get_layer(name='conv{}_block1_out'.format(i)).output for i in range(2, 6)]
 
     # Construção dos blocos do decodificador
     for i in range(n_upsample_blocks):
