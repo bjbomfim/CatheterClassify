@@ -1,68 +1,44 @@
 import tensorflow as tf
-from tensorflow.keras.layers import Input, Conv2D, UpSampling2D, Concatenate, Conv2DTranspose, BatchNormalization, Activation
+from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense
 from tensorflow.keras.applications import ResNet50
+from tensorflow.keras.models import Model
 
-def resize_output(output, target_shape):
-    resized_output = Conv2DTranspose(filters=target_shape[-1], kernel_size=(3, 3), strides=(2, 2), padding='same')(output)
-    resized_output = BatchNormalization()(resized_output)
-    resized_output = Activation('relu')(resized_output)
-    return resized_output
-
-def build_custom_unet(input_shape, decoder_filters=(256, 128, 64, 32, 16),
-                      n_upsample_blocks=5, classes=1, activation='sigmoid'):
-    # Camadas de entrada para as imagens
-    input_img1 = Input(shape=input_shape, name='input_image_1')
-    input_img2 = Input(shape=input_shape, name='input_image_2')
-
-    # Criação do Backbone
-    backbone = ResNet50(weights='imagenet', include_top=False, input_shape=input_shape)
-    # Congela as camadas do backbone para evitar o treinamento
+def build_model(input_shape_1, input_shape_2):
+    # Define as duas entradas
+    input_1 = Input(shape=input_shape_1)
+    input_2 = Input(shape=input_shape_2)
+    
+    # Carregue o modelo ResNet50 pré-treinado
+    backbone = ResNet50(include_top=False, weights='imagenet')
+    
+    # Congele as camadas do backbone para que não sejam treinadas novamente
     backbone.trainable = False
-
-    # Passa as imagens pelo backbone
-    x1 = backbone(input_img1)
-    x2 = backbone(input_img2)
-
-    # Extrai as conexões de skip do backbone
-    skips = [backbone.get_layer(name='conv{}_block1_out'.format(i)).output for i in range(2, 6)]
-
-    # Camadas de up-sampling e concatenação
-    for i in range(n_upsample_blocks):
-        if i < len(skips):
-            skip = skips[i]
-        else:
-            skip = None
-
-        x1 = UpSampling2D(size=(2, 2))(x1)
-        x2 = UpSampling2D(size=(2, 2))(x2)
-
-        # Redimensionar saídas antes da concatenação
-        if x1.shape[1:3] != x2.shape[1:3]:
-            target_shape = (x1.shape[1], x1.shape[2])  # Use a forma de x1 como destino
-            x2 = resize_output(x2, target_shape)
-        elif x2.shape[1:3] != x1.shape[1:3]:
-            target_shape = (x2.shape[1], x2.shape[2])  # Use a forma de x2 como destino
-            x1 = resize_output(x1, target_shape)
-
-        if skip is not None:
-            x1 = Concatenate()([x1, skip])
-            x2 = Concatenate()([x2, skip])
-
-        x1 = Conv2D(filters=decoder_filters[i], kernel_size=(3, 3), activation='relu', padding='same')(x1)
-        x2 = Conv2D(filters=decoder_filters[i], kernel_size=(3, 3), activation='relu', padding='same')(x2)
-        
-    # Camadas de convolução adicionais antes da concatenação
-    x1 = Conv2D(filters=decoder_filters[-1], kernel_size=(3, 3), activation='relu', padding='same')(x1)
-    x2 = Conv2D(filters=decoder_filters[-1], kernel_size=(3, 3), activation='relu', padding='same')(x2)
-
-    # Concatena as saídas dos dois ramos do decodificador
-    concatenated = Concatenate(axis=3)([x1, x2])
-
-    # Última camada convolucional
-    output = Conv2D(filters=classes, kernel_size=(3, 3), padding='same',
-                    activation=activation, name='final_conv')(concatenated)
-
-    # Cria o modelo
-    model = tf.keras.Model(inputs=[input_img1, input_img2], outputs=output)
-
+    
+    # Crie as saídas do backbone
+    backbone_output_1 = backbone(input_1)
+    backbone_output_2 = backbone(input_2)
+    
+    # Adicione camadas adicionais conforme necessário
+    # Por exemplo, você pode adicionar camadas de pooling, flatten e camadas totalmente conectadas
+    
+    # Aqui está um exemplo simples:
+    # Adicione camadas de pooling
+    pooling_layer_1 = MaxPooling2D(pool_size=(2, 2))(backbone_output_1)
+    pooling_layer_2 = MaxPooling2D(pool_size=(2, 2))(backbone_output_2)
+    
+    # Flatten
+    flatten_layer_1 = Flatten()(pooling_layer_1)
+    flatten_layer_2 = Flatten()(pooling_layer_2)
+    
+    # Concatene as saídas
+    concatenated_output = tf.keras.layers.concatenate([flatten_layer_1, flatten_layer_2])
+    
+    # Adicione camadas totalmente conectadas para classificação ou qualquer outra tarefa
+    # Por exemplo:
+    dense_layer_1 = Dense(256, activation='relu')(concatenated_output)
+    output_layer = Dense(1, activation='sigmoid')(dense_layer_1)  # Exemplo de saída binária
+    
+    # Crie o modelo final especificando as entradas e saídas
+    model = Model(inputs=[input_1, input_2], outputs=output_layer)
+    
     return model
