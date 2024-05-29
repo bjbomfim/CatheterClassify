@@ -55,8 +55,13 @@ class DataGenerator(Sequence):
         
         for data in batch_data:
             # Load image
-            img = cv2.imread(data['Path_Arquivo'])
-            mask = cv2.imread(data['Path_Mask'])
+            if os.path.exists(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')):
+                img_path =  os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')
+            else:
+                img_path =  os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.png')
+            mask_path = data['Path_Mask']
+            img = cv2.imread(img_path)
+            mask = cv2.imread(mask_path)
             if img is not None and mask is not None :
                 img = self.resize_image(img)
                 mask = self.resize_image(mask)
