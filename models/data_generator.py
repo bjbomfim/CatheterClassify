@@ -55,10 +55,7 @@ class DataGenerator(Sequence):
         
         for data in batch_data:
             # Load image
-            if os.path.exists(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')):
-                img_path =  os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')
-            else:
-                img_path =  os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.png')
+            img_path =  data['Path_Arquivo']
             mask_path = data['Path_Mask']
             img = cv2.imread(img_path)
             mask = cv2.imread(mask_path)
@@ -127,17 +124,12 @@ class DataGeneratorTwoInputs(Sequence):
         batch_data = [self.dataframe.iloc[k] for k in indexes]
         
         X_images = []
-        X_masks = []
         Y = []
         I = []
 
         for data in batch_data:
-            if os.path.exists(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')):
-                img_path =  os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')
-            else:
-                img_path =  os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.png')
-            
-            predict_path = os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults/predict2/", data['ID']+'.jpg')
+            img_path =  data['Path_Arquivo']
+            predict_path = os.path.join("/content/xrays/train_imagens/predict2/", data['ID']+'.jpg')
             mask_path = data['Path_Mask']
             # Load image
             img = cv2.imread(img_path)
@@ -146,8 +138,12 @@ class DataGeneratorTwoInputs(Sequence):
             if img is not None and mask is not None and predict is not None :
                 img = self.resize_image(img)
                 mask = self.resize_image(mask)
-                predict = np.repeat(predict[..., np.newaxis], 3, -1)
                 predict = self.resize_image(predict)
+                
+                mascara_rgb = cv2.cvtColor(predict, cv2.COLOR_GRAY2RGB)
+
+                # Aplicar a máscara na imagem de raio-X
+                img = cv2.addWeighted(img, 1, mascara_rgb, 0.5, 0)
 
                 if self.augment:
                     augmented = self.augmenter(image=img, mask=mask)
@@ -155,26 +151,19 @@ class DataGeneratorTwoInputs(Sequence):
                     mask = augmented['mask']
                     predict = augmented['mask']
                 
-                
-                # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
-                # predict = cv2.morphologyEx(predict, cv2.MORPH_CLOSE, kernel)
-                
                 img = self.normalize_image(img)
                 mask = self.normalize_image(mask)
-                predict = predict.astype(np.float32) / 255.0
-                
                 
                 I.append(data["ID"])
                 X_images.append(img)
-                X_masks.append(predict)
                 Y.append(mask)
             else:
                 print(f"Erro ao carregar a imagem: " + data["ID"])
         
-        if len(X_images) == 0 or len(X_masks) == 0 or len(Y) == 0:
+        if len(X_images) == 0 or len(Y) == 0:
             print(f"Empty batch at index {index}.")
 
-        return [np.array(X_images), np.array(X_masks)], np.array(Y)
+        return np.array(X_images), np.array(Y)
 
 class DataGeneratorClassify(Sequence):
     def __init__(self, dataframe, batch_size=4, image_size=(384, 384), shuffle=True):
