@@ -12,7 +12,7 @@ from .CustomCallbacks import layer_trainable as LayerTrainable
 
 import tensorflow as tf
 
-def train(train_df, val_df, return_train_path = None, multi_input = True):
+def train(train_df, val_df, return_train_path = None, multi_input = False):
     
     sm.set_framework('tf.keras')
     sm.framework()
