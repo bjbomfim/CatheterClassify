@@ -2,37 +2,6 @@ import tensorflow as tf
 from tensorflow.keras.layers import Input, Conv2D, UpSampling2D, Concatenate
 from tensorflow.keras.applications import ResNet50
 
-def Conv3x3BnReLU(filters, name=None):
-    def wrapper(input_tensor):
-        return Conv2D(
-            filters,
-            kernel_size=3,
-            activation='relu',
-            kernel_initializer='he_uniform',
-            padding='same',
-            name=name,
-        )(input_tensor)
-
-    return wrapper
-
-def DecoderUpsamplingX2Block(filters, stage):
-    up_name = 'decoder_stage{}_upsampling'.format(stage)
-    conv1_name = 'decoder_stage{}a'.format(stage)
-    conv2_name = 'decoder_stage{}b'.format(stage)
-    concat_name = 'decoder_stage{}_concat'.format(stage)
-
-    def wrapper(input_tensor, skip=None):
-        x = UpSampling2D(size=2, name=up_name)(input_tensor)
-        if skip is not None:
-            x = Concatenate(name=concat_name)([x, skip])
-
-        x = Conv3x3BnReLU(filters, name=conv1_name)(x)
-        x = Conv3x3BnReLU(filters, name=conv2_name)(x)
-
-        return x
-
-    return wrapper
-
 def build_custom_unet(input_shape, decoder_filters=(256, 128, 64, 32, 16),
                     n_upsample_blocks=5, classes=1, activation='sigmoid'):
     # Camadas de entrada para as imagens
@@ -51,15 +20,25 @@ def build_custom_unet(input_shape, decoder_filters=(256, 128, 64, 32, 16),
     # Extrai as conexões de skip do backbone
     skips = [backbone.get_layer(name='conv{}_block1_out'.format(i)).output for i in range(2, 6)]
 
-    # Construção dos blocos do decodificador
+    # Camadas de up-sampling e concatenação
     for i in range(n_upsample_blocks):
         if i < len(skips):
             skip = skips[i]
         else:
             skip = None
 
-        x1 = DecoderUpsamplingX2Block(decoder_filters[i], stage=i)(x1, skip)
-        x2 = DecoderUpsamplingX2Block(decoder_filters[i], stage=i)(x2, skip)
+        x1 = UpSampling2D(size=(2, 2))(x1)
+        x2 = UpSampling2D(size=(2, 2))(x2)
+
+        if skip is not None:
+            x1 = Concatenate()([x1, skip])
+            x2 = Concatenate()([x2, skip])
+
+        x1 = Conv2D(filters=decoder_filters[i], kernel_size=(3, 3), activation='relu', padding='same')(x1)
+        x1 = Conv2D(filters=decoder_filters[i], kernel_size=(3, 3), activation='relu', padding='same')(x1)
+        
+        x2 = Conv2D(filters=decoder_filters[i], kernel_size=(3, 3), activation='relu', padding='same')(x2)
+        x2 = Conv2D(filters=decoder_filters[i], kernel_size=(3, 3), activation='relu', padding='same')(x2)
 
     # Concatena as saídas dos dois ramos do decodificador
     concatenated = Concatenate(axis=3)([x1, x2])
