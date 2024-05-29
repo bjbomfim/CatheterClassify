@@ -129,7 +129,7 @@ class DataGeneratorTwoInputs(Sequence):
         for data in batch_data:
             img_path =  os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')
             predict_path = os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults/predict2/", data['ID']+'.jpg')
-            mask_path = os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')
+            mask_path = data['Path_Mask']
             # Load image
             img = cv2.imread(img_path)
             predict = cv2.imread(predict_path, cv2.IMREAD_GRAYSCALE)
