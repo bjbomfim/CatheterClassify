@@ -127,7 +127,11 @@ class DataGeneratorTwoInputs(Sequence):
         I = []
 
         for data in batch_data:
-            img_path =  os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')
+            if os.path.exists(os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')):
+                img_path =  os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.jpg')
+            else:
+                img_path =  os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/raw/dataset/xrays/PreProcessing/", data['ID']+'.png')
+            
             predict_path = os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults/predict2/", data['ID']+'.jpg')
             mask_path = data['Path_Mask']
             # Load image
