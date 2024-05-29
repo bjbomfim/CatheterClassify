@@ -8,6 +8,7 @@ from tensorflow.keras.models import load_model
 
 from . import data_generator as generator
 from .CustomCallbacks import layer_trainable as LayerTrainable
+from .unet import Unet
 
 import tensorflow as tf
 
@@ -28,8 +29,7 @@ def intersection_over_union(y_true, y_pred):
     iou = intersection / union
     return iou
 
-def train(train_ids, val_ids, return_train_path = None):
-    
+def train(train_df, val_df, return_train_path = None, multi_input = True):
     
     sm.set_framework('tf.keras')
     sm.framework()
@@ -47,9 +47,39 @@ def train(train_ids, val_ids, return_train_path = None):
     batch_size = int(os.environ["BATCH_SIZE"])
     image_size = (int(os.environ["IMAGE_SIZE"]), int(os.environ["IMAGE_SIZE"]))
     
+    print("Criando o DataGenerator")
+    # Criando o DataGenerator para os dados de treino
+    train_generator = generator.DataGenerator(
+        train_df,
+        batch_size=batch_size,
+        image_size=image_size,
+        augment=True
+    )
+    
+    val_generator = generator.DataGenerator(
+        val_df,
+        batch_size=batch_size,
+        image_size=image_size,
+        augment=False
+    )
+    
+    if multi_input:
+        train_generator = generator.DataGeneratorTwoInputs(train_df,
+                                                        batch_size=batch_size, 
+                                                        image_size=image_size,
+                                                        augment=True)
+        val_generator = generator.DataGeneratorTwoInputs(val_df,
+                                                        batch_size=batch_size, 
+                                                        image_size=image_size,
+                                                        augment=False)
+    
     print("Criando a model")
     # Criando Modelo
-    model = sm.Unet(backbone, classes=1, activation='sigmoid')
+    # Aqui deveria ser criado um modelo que receba duas entradas
+    if multi_input:
+        model = Unet(backbone, classes=1, activation='sigmoid')
+    else:
+        model = sm.Unet(backbone, classes=1, activation='sigmoid')
 
 
     # Verificando se irá retomar o treinamento
@@ -61,31 +91,13 @@ def train(train_ids, val_ids, return_train_path = None):
                 last_epoch = int(row['epoch'])
         previous_epoch_number = last_epoch
         model.load_weights(os.path.join(return_train_path, "best_segmentation_model.h5"))
+        
     
     model.compile(
         'Adam',
         loss=dice_loss,
         metrics=[intersection_over_union, sm.metrics.f1_score, sm.metrics.precision , sm.metrics.recall],
     )
-    print("Criando o DataGenerator")
-    # Criando o DataGenerator para os dados de treino
-    train_generator = generator.DataGenerator(
-        train_ids,
-        model,
-        batch_size=batch_size,
-        image_size=image_size,
-        augment=True
-    )
-    
-    val_generator = generator.DataGenerator(
-        val_ids,
-        model,
-        batch_size=batch_size,
-        image_size=image_size,
-        augment=False
-    )
-    
-    
     # Callbacks
     
     tensorboard = TensorBoard(log_dir=os.path.join(results_dir, "tensorboard_log"), histogram_freq=1)
