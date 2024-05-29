@@ -26,6 +26,8 @@ def dice_loss(y_true, y_pred):
 
 
 def intersection_over_union(y_true, y_pred):
+    print(y_pred.shape)
+    print(y_true.shape)
     intersection = tf.reduce_sum(y_true * y_pred)
     union = tf.reduce_sum(y_true) + tf.reduce_sum(y_pred) - intersection
     iou = intersection / union
