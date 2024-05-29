@@ -73,7 +73,7 @@ class DataGenerator(Sequence):
                 X.append(img)
                 Y.append(mask)
             else:
-                print(f"Erro ao carregar a imagem: {data["ID"]}")
+                print(f"Erro ao carregar a imagem: ")
 
         return np.array(X), np.array(Y)
 
