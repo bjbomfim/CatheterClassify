@@ -1,8 +1,22 @@
 from keras_applications import get_submodules_from_kwargs
 
 from segmentation_models.models._common_blocks import Conv2dBn
-from segmentation_models.models._utils import freeze_model, filter_keras_submodules
+
 from segmentation_models.backbones.backbones_factory import Backbones
+
+def freeze_model(model, **kwargs):
+    """Set all layers non trainable, excluding BatchNormalization layers"""
+    _, layers, _, _ = get_submodules_from_kwargs(kwargs)
+    for layer in model.layers:
+        if not isinstance(layer, layers.BatchNormalization):
+            layer.trainable = False
+    return
+
+
+def filter_keras_submodules(kwargs):
+    """Selects only arguments that define keras_application submodules. """
+    submodule_keys = kwargs.keys() & {'backend', 'layers', 'models', 'utils'}
+    return {key: kwargs[key] for key in submodule_keys}
 
 backend = None
 layers = None
