@@ -77,7 +77,7 @@ def train(train_df, val_df, return_train_path = None, multi_input = True):
     # Criando Modelo
     # Aqui deveria ser criado um modelo que receba duas entradas
     if multi_input:
-        backbone = tf.keras.applications.ResNet50(weights='imagenet', include_top=False, input_shape=(image_size[0],image_size[1], 3))
+        backbone = tf.keras.applications.ResNet50(weights='imagenet', include_top=False)
         skip_connection_layers = ['conv3_block4_out', 'conv2_block3_out', 'conv1_relu']
         model = build_custom_unet(backbone, skip_connection_layers)
     else:
