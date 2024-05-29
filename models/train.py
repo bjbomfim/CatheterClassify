@@ -12,16 +12,18 @@ from .unet import build_custom_unet
 
 import tensorflow as tf
 
-def dice_coefficient(y_true, y_pred):
-    smooth = 1.0
-    intersection = tf.reduce_sum(y_true * y_pred)
-    union = tf.reduce_sum(y_true) + tf.reduce_sum(y_pred)
+def dice_coefficient(y_true, y_pred, smooth=1.0):
+    y_true_f = tf.keras.backend.flatten(y_true)
+    y_pred_f = tf.keras.backend.flatten(y_pred)
+    intersection = tf.reduce_sum(y_true_f * y_pred_f)
+    union = tf.reduce_sum(y_true_f) + tf.reduce_sum(y_pred_f)
     dice = (2.0 * intersection + smooth) / (union + smooth)
     return dice
 
 def dice_loss(y_true, y_pred):
     loss = 1 - dice_coefficient(y_true, y_pred)
     return loss
+
 
 def intersection_over_union(y_true, y_pred):
     intersection = tf.reduce_sum(y_true * y_pred)
@@ -96,7 +98,7 @@ def train(train_df, val_df, return_train_path = None, multi_input = True):
     model.compile(
         'Adam',
         loss=dice_loss,
-        metrics=[intersection_over_union],
+        metrics=[intersection_over_union, dice_coefficient],
     )
     # Callbacks
     
