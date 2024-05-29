@@ -28,7 +28,7 @@ def build_custom_unet(input_shape, mask_shape):
     x = Conv2DTranspose(128, (3, 3), activation='relu', padding='same')(x)
     x = Conv2DTranspose(64, (3, 3), activation='relu', padding='same')(x)
     x = Conv2DTranspose(32, (3, 3), activation='relu', padding='same')(x)
-    output = Conv2DTranspose(3, (3, 3), activation='sigmoid', padding='same')(x)
+    output = Conv2DTranspose(1, (3, 3), activation='sigmoid', padding='same')(x)
 
     # Definindo o modelo
     model = Model(inputs=[input1, input2], outputs=output)
