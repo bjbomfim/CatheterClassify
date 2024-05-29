@@ -3,42 +3,53 @@ from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense
 from tensorflow.keras.applications import ResNet50
 from tensorflow.keras.models import Model
 
-def build_custom_unet(input_shape_1, input_shape_2):
-    # Define as duas entradas
-    input_1 = Input(shape=input_shape_1)
-    input_2 = Input(shape=input_shape_2)
+import tensorflow as tf
+from tensorflow.keras.layers import Input, Conv2D, Conv2DTranspose, concatenate, MaxPooling2D, UpSampling2D
+from tensorflow.keras.models import Model
+from tensorflow.keras.applications import ResNet50
+
+def unet_decoder(encoder_inputs, skip_connections):
+    # Extract the number of filters from skip connections
+    filters = [s.shape[-1] for s in skip_connections][::-1]
     
-    # Carregue o modelo ResNet50 pré-treinado
-    backbone = ResNet50(include_top=False, weights='imagenet')
+    # Start with the bottom layer of the encoder
+    x = encoder_inputs
     
-    # Congele as camadas do backbone para que não sejam treinadas novamente
-    backbone.trainable = True
+    # Decoder path
+    for i in range(len(filters)):
+        x = UpSampling2D((2, 2))(x)
+        x = concatenate([x, skip_connections[-(i+1)]])
+        x = Conv2D(filters[i], (3, 3), activation='relu', padding='same')(x)
+        x = Conv2D(filters[i], (3, 3), activation='relu', padding='same')(x)
     
-    # Crie as saídas do backbone
-    backbone_output_1 = backbone(input_1)
-    backbone_output_2 = backbone(input_2)
+    return x
+
+def build_custom_unet():
+    # Input layers
+    input1 = Input(shape=(None, None, 3))
+    input2 = Input(shape=(None, None, 3))
     
-    # Adicione camadas adicionais conforme necessário
-    # Por exemplo, você pode adicionar camadas de pooling, flatten e camadas totalmente conectadas
+    # ResNet50 Encoder
+    base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=input1)
     
-    # Aqui está um exemplo simples:
-    # Adicione camadas de pooling
-    pooling_layer_1 = MaxPooling2D(pool_size=(2, 2))(backbone_output_1)
-    pooling_layer_2 = MaxPooling2D(pool_size=(2, 2))(backbone_output_2)
+    # Extract skip connections
+    skip_connections = [
+        base_model.get_layer('conv1_relu').output,
+        base_model.get_layer('conv2_block3_out').output,
+        base_model.get_layer('conv3_block4_out').output,
+        base_model.get_layer('conv4_block6_out').output,
+    ]
     
-    # Flatten
-    flatten_layer_1 = Flatten()(pooling_layer_1)
-    flatten_layer_2 = Flatten()(pooling_layer_2)
+    # Bottom layer
+    encoder_output = base_model.get_layer('conv5_block3_out').output
     
-    # Concatene as saídas
-    concatenated_output = tf.keras.layers.concatenate([flatten_layer_1, flatten_layer_2])
+    # Build the UNet decoder
+    decoder_output = unet_decoder(encoder_output, skip_connections)
     
-    # Adicione camadas totalmente conectadas para classificação ou qualquer outra tarefa
-    # Por exemplo:
-    dense_layer_1 = Dense(256, activation='relu')(concatenated_output)
-    output_layer = Dense(1, activation='sigmoid')(dense_layer_1)  # Exemplo de saída binária
+    # Optional: Add a final conv layer to get desired output channels
+    output = Conv2D(1, (1, 1), activation='sigmoid')(decoder_output)
     
-    # Crie o modelo final especificando as entradas e saídas
-    model = Model(inputs=[input_1, input_2], outputs=output_layer)
+    # Create the model
+    model = Model(inputs=[input1, input2], outputs=output)
     
     return model
