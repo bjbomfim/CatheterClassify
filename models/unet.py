@@ -3,7 +3,7 @@ from tensorflow.keras.layers import Input, Conv2D, UpSampling2D, Concatenate
 from tensorflow.keras.applications import ResNet50
 
 def build_custom_unet(input_shape, decoder_filters=(256, 128, 64, 32, 16),
-                    n_upsample_blocks=5, classes=1, activation='sigmoid'):
+                      n_upsample_blocks=5, classes=1, activation='sigmoid'):
     # Camadas de entrada para as imagens
     input_img1 = Input(shape=input_shape, name='input_image_1')
     input_img2 = Input(shape=input_shape, name='input_image_2')
@@ -35,10 +35,11 @@ def build_custom_unet(input_shape, decoder_filters=(256, 128, 64, 32, 16),
             x2 = Concatenate()([x2, skip])
 
         x1 = Conv2D(filters=decoder_filters[i], kernel_size=(3, 3), activation='relu', padding='same')(x1)
-        x1 = Conv2D(filters=decoder_filters[i], kernel_size=(3, 3), activation='relu', padding='same')(x1)
+        x2 = Conv2D(filters=decoder_filters[i], kernel_size=(3, 3), activation='relu', padding='same')(x2)
         
-        x2 = Conv2D(filters=decoder_filters[i], kernel_size=(3, 3), activation='relu', padding='same')(x2)
-        x2 = Conv2D(filters=decoder_filters[i], kernel_size=(3, 3), activation='relu', padding='same')(x2)
+    # Camadas de convolução adicionais antes da concatenação
+    x1 = Conv2D(filters=decoder_filters[-1], kernel_size=(3, 3), activation='relu', padding='same')(x1)
+    x2 = Conv2D(filters=decoder_filters[-1], kernel_size=(3, 3), activation='relu', padding='same')(x2)
 
     # Concatena as saídas dos dois ramos do decodificador
     concatenated = Concatenate(axis=3)([x1, x2])
