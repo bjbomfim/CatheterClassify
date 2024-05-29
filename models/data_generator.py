@@ -156,8 +156,8 @@ class DataGeneratorTwoInputs(Sequence):
                     predict = augmented['mask']
                 
                 
-                kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
-                predict = cv2.morphologyEx(predict, cv2.MORPH_CLOSE, kernel)
+                # kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+                # predict = cv2.morphologyEx(predict, cv2.MORPH_CLOSE, kernel)
                 
                 img = self.normalize_image(img)
                 mask = self.normalize_image(mask)

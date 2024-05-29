@@ -1,9 +1,4 @@
 import tensorflow as tf
-from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense
-from tensorflow.keras.applications import ResNet50
-from tensorflow.keras.models import Model
-
-import tensorflow as tf
 from tensorflow.keras.layers import Input, Conv2D, Conv2DTranspose, concatenate, MaxPooling2D, UpSampling2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.applications import ResNet50

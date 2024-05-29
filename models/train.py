@@ -5,6 +5,7 @@ import csv
 import segmentation_models as sm
 from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, CSVLogger, ModelCheckpoint, ReduceLROnPlateau
 from tensorflow.keras.models import load_model
+from tensorflow.keras.metrics import AUC, Precision, Recall
 
 from . import data_generator as generator
 from .CustomCallbacks import layer_trainable as LayerTrainable
@@ -74,12 +75,14 @@ def train(train_df, val_df, return_train_path = None, multi_input = True):
                                                         image_size=image_size,
                                                         augment=False)
     
-    print("Criando a model")
+    
     # Criando Modelo
     # Aqui deveria ser criado um modelo que receba duas entradas
     if multi_input:
+        print("Creating a model with two inputs")
         model = build_custom_unet()
     else:
+        print("Creating a model")
         model = sm.Unet(backbone, classes=1, activation='sigmoid')
 
 
@@ -97,7 +100,7 @@ def train(train_df, val_df, return_train_path = None, multi_input = True):
     model.compile(
         'Adam',
         loss=dice_loss,
-        metrics=[intersection_over_union],
+        metrics=[intersection_over_union, AUC(name='auc'), Precision(name='precision'), Recall(name='recall')],
     )
     # Callbacks
     
