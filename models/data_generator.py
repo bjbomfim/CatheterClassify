@@ -128,7 +128,7 @@ class DataGeneratorTwoInputs(Sequence):
 
         for data in batch_data:
             img_path =  data['Path_Arquivo']
-            predict_path = os.path.join("/content/xrays/train_imagens/ClassifyPreProcessing/", data['ID']+'.jpg')
+            predict_path = os.path.join("/content/xrays/train_imagens/predict2/", data['ID']+'.jpg')
             mask_path = data['Path_Mask']
             # Load image
             img = cv2.imread(img_path)
