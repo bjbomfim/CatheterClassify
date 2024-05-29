@@ -3,7 +3,7 @@ from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense
 from tensorflow.keras.applications import ResNet50
 from tensorflow.keras.models import Model
 
-def build_model(input_shape_1, input_shape_2):
+def build_custom_unet(input_shape_1, input_shape_2):
     # Define as duas entradas
     input_1 = Input(shape=input_shape_1)
     input_2 = Input(shape=input_shape_2)
