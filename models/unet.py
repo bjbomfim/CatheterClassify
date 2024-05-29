@@ -1,6 +1,12 @@
 import tensorflow as tf
-from tensorflow.keras.layers import Input, Conv2D, UpSampling2D, Concatenate
+from tensorflow.keras.layers import Input, Conv2D, UpSampling2D, Concatenate, Conv2DTranspose, BatchNormalization, Activation
 from tensorflow.keras.applications import ResNet50
+
+def resize_output(output, target_shape):
+    resized_output = Conv2DTranspose(filters=target_shape[-1], kernel_size=(3, 3), strides=(2, 2), padding='same')(output)
+    resized_output = BatchNormalization()(resized_output)
+    resized_output = Activation('relu')(resized_output)
+    return resized_output
 
 def build_custom_unet(input_shape, decoder_filters=(256, 128, 64, 32, 16),
                       n_upsample_blocks=5, classes=1, activation='sigmoid'):
@@ -29,6 +35,14 @@ def build_custom_unet(input_shape, decoder_filters=(256, 128, 64, 32, 16),
 
         x1 = UpSampling2D(size=(2, 2))(x1)
         x2 = UpSampling2D(size=(2, 2))(x2)
+
+        # Redimensionar saídas antes da concatenação
+        if x1.shape[1:3] != x2.shape[1:3]:
+            target_shape = (x1.shape[1], x1.shape[2])  # Use a forma de x1 como destino
+            x2 = resize_output(x2, target_shape)
+        elif x2.shape[1:3] != x1.shape[1:3]:
+            target_shape = (x2.shape[1], x2.shape[2])  # Use a forma de x2 como destino
+            x1 = resize_output(x1, target_shape)
 
         if skip is not None:
             x1 = Concatenate()([x1, skip])
