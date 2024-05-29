@@ -24,6 +24,7 @@ def DecoderUpsamplingX2Block(filters, stage):
         x = UpSampling2D(size=2, name=up_name)(input_tensor)
 
         if skip is not None:
+            skip = Conv2D(filters, kernel_size=1, padding='same', name='skip_conv')(skip)
             x = Concatenate(name=concat_name)([x, skip])
 
         x = Conv3x3BnReLU(filters, name=conv1_name)(x)
