@@ -9,22 +9,8 @@ from tensorflow.keras.metrics import AUC, Precision, Recall
 
 from . import data_generator as generator
 from .CustomCallbacks import layer_trainable as LayerTrainable
-from .unet import build_custom_unet
 
 import tensorflow as tf
-
-def dice_loss(y_true, y_pred, smooth=1):
-    y_true_f = tf.keras.backend.flatten(y_true)
-    y_pred_f = tf.keras.backend.flatten(y_pred)
-    intersection = tf.keras.backend.sum(y_true_f * y_pred_f)
-    return 1 - (2. * intersection + smooth) / (tf.keras.backend.sum(y_true_f) + tf.keras.backend.sum(y_pred_f) + smooth)
-
-def iou(y_true, y_pred, smooth=1):
-    y_true_f = tf.keras.backend.flatten(y_true)
-    y_pred_f = tf.keras.backend.flatten(y_pred)
-    intersection = tf.keras.backend.sum(y_true_f * y_pred_f)
-    union = tf.keras.backend.sum(y_true_f) + tf.keras.backend.sum(y_pred_f) - intersection
-    return (intersection + smooth) / (union + smooth)
 
 def train(train_df, val_df, return_train_path = None, multi_input = True):
     
@@ -89,8 +75,8 @@ def train(train_df, val_df, return_train_path = None, multi_input = True):
     
     model.compile(
         'Adam',
-        loss=dice_loss,
-        metrics=[iou, AUC(name='auc'), Precision(name='precision'), Recall(name='recall')],
+        loss=sm.losses.dice_loss,
+        metrics=[sm.metrics.iou_score, AUC(name='auc'), Precision(name='precision'), Recall(name='recall')],
     )
     # Callbacks
     

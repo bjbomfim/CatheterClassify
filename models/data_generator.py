@@ -144,7 +144,7 @@ class DataGeneratorTwoInputs(Sequence):
 
                 # Aplicar a máscara na imagem de raio-X
                 img = cv2.addWeighted(img, 1, mascara_rgb, 0.5, 0)
-
+                img = self.resize_image(img)
                 if self.augment:
                     augmented = self.augmenter(image=img, mask=mask)
                     img = augmented['image']
