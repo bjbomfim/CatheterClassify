@@ -19,10 +19,10 @@ def unet_decoder(encoder_inputs, skip_connections):
     
     return x
 
-def build_custom_unet():
+def build_custom_unet(image_shape, mask_shape):
     # Input layers
-    input1 = Input(shape=(None, None, 3))
-    input2 = Input(shape=(None, None, 3))
+    input1 = Input(shape=image_shape)
+    input2 = Input(shape=mask_shape)
     
     # ResNet50 Encoder
     base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=input1)

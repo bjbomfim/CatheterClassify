@@ -75,7 +75,9 @@ def train(train_df, val_df, return_train_path = None, multi_input = True):
     # Aqui deveria ser criado um modelo que receba duas entradas
     if multi_input:
         print("Creating a model with two inputs")
-        model = build_custom_unet()
+        input_shape = (image_size[0], image_size[1], 3)
+        image_shape = (image_size[0], image_size[1], 3)
+        model = build_custom_unet(image_shape, input_shape)
     else:
         print("Creating a model")
         model = sm.Unet(backbone, classes=1, activation='sigmoid')
