@@ -160,7 +160,7 @@ class DataGeneratorTwoInputs(Sequence):
                 X_masks.append(predict)
                 Y.append(mask)
             else:
-                print(f"Erro ao carregar a imagem: {data["ID"]}")
+                print(f"Erro ao carregar a imagem: ")
 
         return [np.array(X_images), np.array(X_masks)], np.array(Y)
 
