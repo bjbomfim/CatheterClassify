@@ -26,11 +26,11 @@ def dice_loss(y_true, y_pred):
 
 
 def intersection_over_union(y_true, y_pred):
-    print(y_pred.shape)
-    print(y_true.shape)
-    intersection = tf.reduce_sum(y_true * y_pred)
-    union = tf.reduce_sum(y_true) + tf.reduce_sum(y_pred) - intersection
-    iou = intersection / union
+    y_true_f = tf.keras.backend.flatten(y_true)
+    y_pred_f = tf.keras.backend.flatten(y_pred)
+    intersection = tf.reduce_sum(y_true_f * y_pred_f)
+    union = tf.reduce_sum(y_true_f) + tf.reduce_sum(y_pred_f) - intersection
+    iou = intersection / (union + tf.keras.backend.epsilon())  # Add epsilon to avoid division by zero
     return iou
 
 def train(train_df, val_df, return_train_path = None, multi_input = True):
