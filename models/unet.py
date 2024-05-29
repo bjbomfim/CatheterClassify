@@ -12,7 +12,7 @@ def build_custom_unet(input_shape_1, input_shape_2):
     backbone = ResNet50(include_top=False, weights='imagenet')
     
     # Congele as camadas do backbone para que não sejam treinadas novamente
-    backbone.trainable = False
+    backbone.trainable = True
     
     # Crie as saídas do backbone
     backbone_output_1 = backbone(input_1)

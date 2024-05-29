@@ -97,7 +97,7 @@ def train(train_df, val_df, return_train_path = None, multi_input = True):
     model.compile(
         'Adam',
         loss=dice_loss,
-        metrics=[intersection_over_union, sm.metrics.f1_score, sm.metrics.precision , sm.metrics.recall],
+        metrics=[intersection_over_union],
     )
     # Callbacks
     
