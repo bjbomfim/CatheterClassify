@@ -28,7 +28,7 @@ def intersection_over_union(y_true, y_pred):
     iou = intersection / union
     return iou
 
-def train(train_ids, val_ids, return_train_path = None):
+def train(train_ids, val_ids, return_train_path = "/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults/2024_05_29_22_10_35_PM"):
     
     
     sm.set_framework('tf.keras')

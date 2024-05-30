@@ -67,6 +67,8 @@ def determine_tube(type: TubesRules, length, width, binary_image):
 def find_contours(name_img, path):
     
     img = cv2.imread(os.path.join(path, name_img), cv2.IMREAD_GRAYSCALE)
+    
+    
     img = cv2.resize(img, (384, 384))
 
     _, binary_image = cv2.threshold(img, 200, 255, cv2.THRESH_BINARY)
@@ -111,6 +113,20 @@ def salvar_csv(path, images_map):
         write_csv.writeheader()
         write_csv.writerows(dados)
 
+def count_pixels(name_img, path):
+    img = cv2.imread(os.path.join(path, name_img), cv2.IMREAD_GRAYSCALE)
+    img = cv2.resize(img, (704, 704))
+    
+    if img is None:
+        raise ValueError(f"Erro ao carregar a imagem {os.path.join(path, name_img)}")
+    
+    # Contar os pixels com valor 1
+    pixel_count = cv2.countNonZero(img)
+    
+    if pixel_count < 172:
+        return False
+    return True
+
 def predict_tube():
     
     parser = argparse.ArgumentParser(description="BinaryClassify.")
@@ -144,16 +160,22 @@ def predict_tube():
     for key, value in images_map.items():
         print(f"Imagem: {key}")
         if os.path.exists(os.path.join(path, key)):
-            length, width, binary_image = find_contours(key, path)
+            countPixels = count_pixels(key, path)
+            if countPixels :
+                length, width, binary_image = find_contours(key, path)
             
-            if length is not None:
-                preditc = determine_tube(tube, length, width, binary_image)
-                images_map[key] = preditc
-                print(f"Predict:{preditc}")
+                if length is not None:
+                    preditc = determine_tube(tube, length, width, binary_image)
+                    images_map[key] = preditc
+                    print(f"Predict:{preditc}")
+                # Não possui tubo
+                else:
+                    images_map[key] = 0
+                    print("Predict elimanado por tamanho:0")
             # Não possui tubo
             else:
                 images_map[key] = 0
-                print("Predict:0")
+                print("Predict elimando por contagem de pixel:0")
         else:
             print(f"Não existe caminho para imagem: {key}")
     
