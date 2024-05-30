@@ -4,11 +4,15 @@ from dotenv import load_dotenv
 import csv
 
 from .models import train
+from .models import trainRefinamento
 from .models import trainClassify
 import pandas as pd
 
 def segmentation_train(train_ids, val_ids):
     train.train(train_ids=train_ids, val_ids=val_ids)
+
+def segmentation_refined(train_ids, val_ids):
+    trainRefinamento.train(train_ids=train_ids, val_ids=val_ids)
 
 def segmentacao_ensemble(train_ids, val_ids, model_path):
     train.train_with_ensemble(train_ids=train_ids, val_ids=val_ids, pretrained_model_path=model_path)
@@ -30,6 +34,11 @@ def main(model_name_train = "segmentacao"):
         train_df = pd.read_csv(train_csv_path)
         val_df = pd.read_csv(val_csv_path)
         classify_train(train_df, val_df)
+    
+    elif model_name_train == "segmentationRefined":
+        train_df = pd.read_csv(train_csv_path)
+        val_df = pd.read_csv(val_csv_path)
+        segmentation_refined(train_df, val_df)
     else:
         with open(train_csv_path,'r') as folder_csv:
             read_csv = csv.reader(folder_csv)
