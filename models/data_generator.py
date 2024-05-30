@@ -83,6 +83,83 @@ class DataGenerator(Sequence):
 
         return np.array(X), np.array(Y)
 
+class DataGeneratorRefinamento(Sequence):
+    def __init__(self, dataframe, batch_size=4, image_size=(384, 384), shuffle=False, augment = False):
+        self.dataframe = dataframe
+        self.batch_size = batch_size
+        self.image_size = image_size
+        self.shuffle = shuffle
+        self.indexes = np.arange(len(self.dataframe))
+        self.augment = augment
+        if self.augment:
+            self.augmenter = A.Compose([
+                A.HorizontalFlip(p=0.5),
+                A.VerticalFlip(p=0.5),
+                A.RandomRotate90(p=0.5),
+                A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, rotate_limit=45, p=0.5),
+                A.OneOf([
+                    A.CLAHE(clip_limit=2),
+                    A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2),
+                ], p=0.5),
+                A.OneOf([
+                    A.GaussNoise(),
+                    A.GaussianBlur(),
+                ], p=0.5),
+            ])
+    
+    def __len__(self):
+        return int(np.ceil(len(self.dataframe) / self.batch_size))
+
+    def on_epoch_end(self):
+        if self.shuffle:
+            np.random.shuffle(self.indexes)
+
+    def blend_images(self, image, mask, alpha=0.5):
+        # Ensure mask has the same number of channels as image
+        mask_colored = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
+        blended = cv2.addWeighted(image, alpha, mask_colored, 1 - alpha, 0)
+        return blended
+
+    def __getitem__(self, index):
+        indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
+        batch_data = [self.dataframe.iloc[k] for k in indexes]
+
+        X = []
+        Y = []
+        I = []
+        
+        for data in batch_data:
+            # Load image
+            img_path = data['Path_Arquivo']
+            mask_path = data['Path_Mask']
+            img = cv2.imread(img_path)
+            mask = cv2.imread(mask_path)
+            predict = cv2.imread("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults/predict2", cv2.IMREAD_GRAYSCALE)
+            
+            if img is not None and mask is not None :
+                img = self.resize_image(img)
+                mask = self.resize_image(mask)
+                predict = self.resize_image(predict)
+                
+                # Aqui deve ser feito a mesclagem do predit e do img
+                blended_img = self.blend_images(img, predict)
+                if self.augment:
+                    augmented = self.augmenter(image=blended_img, mask=mask)
+                    img = augmented['image']
+                    mask = augmented['mask']
+                    
+                img = self.normalize_image(img)
+                mask = self.normalize_image(mask)
+
+                I.append(data['ID'])
+                X.append(img)
+                Y.append(mask)
+            else:
+                print(f"Erro ao carregar a imagem: {data['ID']}")
+
+        return np.array(X), np.array(Y)
+
+
 class DataGeneratorClassify(Sequence):
     def __init__(self, dataframe, batch_size=4, image_size=(384, 384), shuffle=True):
         self.dataframe = dataframe
