@@ -171,7 +171,12 @@ class DataGeneratorRefinamento(Sequence):
                 X_masks.append(predict)
                 Y.append(mask)
             else:
-                print(f"Erro ao carregar a imagem: " + data["ID"])
+                if img is None:
+                    print(f"Erro ao carregar img a imagem: " + img_path)
+                if mask is not None:
+                    print(f"Erro ao carregar mask a imagem: " + mask_path)
+                if predict is not None:
+                    print(f"Erro ao carregar predict a imagem: " + predict_path)
         
         if len(X_images) == 0 or len(X_masks) == 0 or len(Y) == 0:
             print(f"Empty batch at index {index}.")
