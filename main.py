@@ -20,7 +20,7 @@ def segmentacao_ensemble(train_ids, val_ids, model_path):
 def classify_train(train_ids, val_ids):
     trainClassify.train(train_ids, val_ids, False)
 
-def main(model_name_train = "segmentationRefined"):
+def main(model_name_train = "segmentacao"):
     
     load_dotenv()
     # TREINO DE SEGMENTAÇÃO
@@ -34,11 +34,6 @@ def main(model_name_train = "segmentationRefined"):
         train_df = pd.read_csv(train_csv_path)
         val_df = pd.read_csv(val_csv_path)
         classify_train(train_df, val_df)
-    
-    elif model_name_train == "segmentationRefined":
-        train_df = pd.read_csv(train_csv_path)
-        val_df = pd.read_csv(val_csv_path)
-        segmentation_refined(train_df, val_df)
     else:
         with open(train_csv_path,'r') as folder_csv:
             read_csv = csv.reader(folder_csv)
