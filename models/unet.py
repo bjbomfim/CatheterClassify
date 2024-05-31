@@ -21,7 +21,7 @@ def build_custom_unet():
     # Concatenate inputs
     concatenated_inputs = tf.keras.layers.Concatenate()([input1, input2])  # Usando Concatenate() em vez de concatenate()
     # Camada adiconal para 3 canais
-    reduced_channels = tf.keras.layers.Conv2D(3, (1, 1), kernel_initializer='glorot_uniform')(concatenated_inputs)
+    reduced_channels = tf.keras.layers.Conv2D(3, (1, 1), activation='relu')(concatenated_inputs)
     
     # Manually set the weights of the subsequent layers from pretrained ResNet50
     base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=reduced_channels)
