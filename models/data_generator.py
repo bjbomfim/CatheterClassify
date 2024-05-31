@@ -7,23 +7,12 @@ from tensorflow.keras.utils import Sequence
 import albumentations as A
 
 class DataGenerator(Sequence):
-    def __init__(self,
-                list_IDs,
-                model,
-                batch_size=4,
-                image_size=(384, 384),
-                shuffle=True,
-                output_path="/content/output",
-                augment=False):
-        
-        self.list_IDs = list_IDs
-        self.model = model
+    def __init__(self, dataframe, batch_size=4, image_size=(384, 384), shuffle=False, augment = False):
+        self.dataframe = dataframe
         self.batch_size = batch_size
         self.image_size = image_size
         self.shuffle = shuffle
-        self.indexes = list_IDs.copy()
-        self.output_path = output_path
-        self.num_epoch = 1
+        self.indexes = np.arange(len(self.dataframe))
         self.augment = augment
         if self.augment:
             self.augmenter = A.Compose([
@@ -42,7 +31,11 @@ class DataGenerator(Sequence):
             ])
     
     def __len__(self):
-        return int(np.ceil(len(self.list_IDs) / self.batch_size))
+        return int(np.ceil(len(self.dataframe) / self.batch_size))
+
+    def on_epoch_end(self):
+        if self.shuffle:
+            np.random.shuffle(self.indexes)
 
     def resize_image(self, img):
         img = cv2.resize(img, self.image_size)
@@ -51,18 +44,21 @@ class DataGenerator(Sequence):
     def normalize_image(self, img):
         img = img / 255.0
         return img
-    
+
     def __getitem__(self, index):
-        indexes = self.indexes[index*self.batch_size : (index + 1)*self.batch_size]
-        
+        indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
+        batch_data = [self.dataframe.iloc[k] for k in indexes]
+
         X = []
         Y = []
         I = []
         
-        for idx in indexes:
+        for data in batch_data:
             # Load image
-            img = cv2.imread(idx[2])
-            mask = cv2.imread(idx[3])
+            img_path = data['Path_Arquivo']
+            mask_path = data['Path_Mask']
+            img = cv2.imread(img_path)
+            mask = cv2.imread(mask_path)
             if img is not None and mask is not None :
                 img = self.resize_image(img)
                 mask = self.resize_image(mask)
@@ -75,11 +71,11 @@ class DataGenerator(Sequence):
                 img = self.normalize_image(img)
                 mask = self.normalize_image(mask)
 
-                I.append(idx[0])
+                I.append(data['ID'])
                 X.append(img)
                 Y.append(mask)
             else:
-                print(f"Erro ao carregar a imagem: {idx[0]}")
+                print(f"Erro ao carregar a imagem: {data['ID']}")
 
         return np.array(X), np.array(Y)
 
