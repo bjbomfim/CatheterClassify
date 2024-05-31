@@ -120,6 +120,14 @@ class DataGeneratorRefinamento(Sequence):
         blended = cv2.addWeighted(image, alpha, mask_colored, 1 - alpha, 0)
         return blended
 
+    def resize_image(self, img):
+        img = cv2.resize(img, self.image_size)
+        return img
+
+    def normalize_image(self, img):
+        img = img / 255.0
+        return img
+
     def __getitem__(self, index):
         indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
         batch_data = [self.dataframe.iloc[k] for k in indexes]
@@ -134,7 +142,7 @@ class DataGeneratorRefinamento(Sequence):
             mask_path = data['Path_Mask']
             img = cv2.imread(img_path)
             mask = cv2.imread(mask_path)
-            predict = cv2.imread("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults/predict2", cv2.IMREAD_GRAYSCALE)
+            predict = cv2.imread("/content/xrays/train_imagens/predict2", cv2.IMREAD_GRAYSCALE)
             
             if img is not None and mask is not None :
                 img = self.resize_image(img)
