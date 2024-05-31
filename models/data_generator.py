@@ -19,17 +19,15 @@ class DataGenerator(Sequence):
                 A.HorizontalFlip(p=0.5),
                 A.VerticalFlip(p=0.5),
                 A.RandomRotate90(p=0.5),
-                A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, rotate_limit=15, p=0.5),
+                A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, rotate_limit=45, p=0.5),
                 A.OneOf([
                     A.CLAHE(clip_limit=2),
                     A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2),
-                    A.HueSaturationValue(hue_shift_limit=20, sat_shift_limit=30, val_shift_limit=20)
                 ], p=0.5),
                 A.OneOf([
                     A.GaussNoise(),
                     A.GaussianBlur(),
                 ], p=0.5),
-                A.CoarseDropout(max_holes=8, max_height=8, max_width=8, p=0.5),
             ])
     
     def __len__(self):
