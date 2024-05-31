@@ -20,20 +20,11 @@ def build_custom_unet():
     
     # Concatenate inputs
     concatenated_inputs = tf.keras.layers.Concatenate()([input1, input2])  # Usando Concatenate() em vez de concatenate()
-
-    # Custom ResNet50 to handle 6-channel input
-    base_model = ResNet50(include_top=False, weights=None, input_tensor=concatenated_inputs)
-    
-    # Change the first conv layer to accept 6 channels
-    x = Conv2D(64, (7, 7), strides=(2, 2), padding='same', 
-               kernel_initializer=RandomNormal(mean=0.0, stddev=0.01))(concatenated_inputs)
-    x = base_model.layers[2](x)  # Next layers in the base model
+    # Camada adiconal para 3 canais
+    reduced_channels = tf.keras.layers.Conv2D(3, (1, 1))(concatenated_inputs)
     
     # Manually set the weights of the subsequent layers from pretrained ResNet50
-    pretrained_resnet = ResNet50(include_top=False, weights='imagenet')
-    for layer in base_model.layers[3:]:
-        pretrained_layer = pretrained_resnet.get_layer(name=layer.name)
-        layer.set_weights(pretrained_layer.get_weights())
+    base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=reduced_channels)
     
     # Extract skip connections
     skip_connections = [
