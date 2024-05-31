@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 import csv
 
+from models.unet import build_custom_unet
 import segmentation_models as sm
 from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, CSVLogger, ModelCheckpoint, ReduceLROnPlateau
 from tensorflow.keras.models import load_model
@@ -60,7 +61,7 @@ def train(train_df, val_df, return_train_path = None):
     )
 
     # Criando Modelo
-    model = sm.Unet(backbone, classes=1, activation='sigmoid')
+    model = build_custom_unet()
 
     # Verificando se irá retomar o treinamento
     previous_epoch_number = 0

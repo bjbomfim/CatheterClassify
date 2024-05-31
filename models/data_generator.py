@@ -129,43 +129,54 @@ class DataGeneratorRefinamento(Sequence):
         return img
 
     def __getitem__(self, index):
-        indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
+        indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
         batch_data = [self.dataframe.iloc[k] for k in indexes]
-
-        X = []
+        
+        X_images = []
+        X_masks = []
         Y = []
         I = []
-        
+
         for data in batch_data:
-            # Load image
             img_path = data['Path_Arquivo']
+            predict_path = os.path.join("/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults/predict2/", data['ID']+'.jpg')
             mask_path = data['Path_Mask']
+            # Load image
             img = cv2.imread(img_path)
-            mask = cv2.imread(mask_path)
-            predict = cv2.imread("/content/xrays/train_imagens/predict2/"+data["ID"]+".jpg", cv2.IMREAD_GRAYSCALE)
-            
-            if img is not None and mask is not None and predict is not None:
+            predict = cv2.imread(predict_path, cv2.IMREAD_GRAYSCALE)
+            mask =  cv2.imread(mask_path)
+            if img is not None and mask is not None and predict is not None :
                 img = self.resize_image(img)
                 mask = self.resize_image(mask)
+                predict = np.repeat(predict[..., np.newaxis], 3, -1)
                 predict = self.resize_image(predict)
+
+                # if self.augment:
+                #     augmented = self.augmenter(image=img, mask=mask)
+                #     img = augmented['image']
+                #     mask = augmented['mask']
+                #     predict = augmented['mask']
                 
-                # Aqui deve ser feito a mesclagem do predit e do img
-                blended_img = self.blend_images(img, predict)
-                if self.augment:
-                    augmented = self.augmenter(image=blended_img, mask=mask)
-                    img = augmented['image']
-                    mask = augmented['mask']
-                    
+                
+                kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+                predict = cv2.morphologyEx(predict, cv2.MORPH_CLOSE, kernel)
+                
                 img = self.normalize_image(img)
                 mask = self.normalize_image(mask)
-
-                I.append(data['ID'])
-                X.append(img)
+                predict = predict.astype(np.float32) / 255.0
+                
+                
+                I.append(data["ID"])
+                X_images.append(img)
+                X_masks.append(predict)
                 Y.append(mask)
             else:
-                print(f"Erro ao carregar a imagem: {data['ID']}")
+                print(f"Erro ao carregar a imagem: " + data["ID"])
+        
+        if len(X_images) == 0 or len(X_masks) == 0 or len(Y) == 0:
+            print(f"Empty batch at index {index}.")
 
-        return np.array(X), np.array(Y)
+        return [np.array(X_images), np.array(X_masks)], np.array(Y)
 
 
 class DataGeneratorClassify(Sequence):
