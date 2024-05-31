@@ -12,7 +12,7 @@ def segmentation_train(train_ids, val_ids):
     train.train(train_ids=train_ids, val_ids=val_ids)
 
 def segmentation_refined(train_ids, val_ids):
-    trainRefinamento.train(train_ids=train_ids, val_ids=val_ids)
+    trainRefinamento.train(train_df=train_ids, val_df=val_ids)
 
 def segmentacao_ensemble(train_ids, val_ids, model_path):
     train.train_with_ensemble(train_ids=train_ids, val_ids=val_ids, pretrained_model_path=model_path)
