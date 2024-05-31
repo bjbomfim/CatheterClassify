@@ -115,7 +115,7 @@ def salvar_csv(path, images_map):
 
 def count_pixels(name_img, path):
     img = cv2.imread(os.path.join(path, name_img), cv2.IMREAD_GRAYSCALE)
-    img = cv2.resize(img, (704, 704))
+    img = cv2.resize(img, (512, 512))
     
     if img is None:
         raise ValueError(f"Erro ao carregar a imagem {os.path.join(path, name_img)}")
@@ -123,7 +123,7 @@ def count_pixels(name_img, path):
     # Contar os pixels com valor 1
     pixel_count = cv2.countNonZero(img)
     
-    if pixel_count < 172:
+    if pixel_count < 91:
         return False
     return True
 
