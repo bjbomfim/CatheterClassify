@@ -28,41 +28,19 @@ def main(model_name_train = "segmentacao"):
     train_csv_path = os.getenv("TRAIN_CSV_PATH")
     val_csv_path = os.getenv("TEST_CSV_PATH")
     
-    train_ids = []
-    val_ids = []
+    train_df = pd.read_csv(train_csv_path)
+    val_df = pd.read_csv(val_csv_path)
     if model_name_train == "classify":
-        train_df = pd.read_csv(train_csv_path)
-        val_df = pd.read_csv(val_csv_path)
         classify_train(train_df, val_df)
     
     elif model_name_train == "segmentationRefined":
-        train_df = pd.read_csv(train_csv_path)
-        val_df = pd.read_csv(val_csv_path)
         segmentation_refined(train_df, val_df)
     else:
-        with open(train_csv_path,'r') as folder_csv:
-            read_csv = csv.reader(folder_csv)
-            
-            for line in read_csv:
-                train_ids.append(line)
-
-            # Removendo titulo colunas
-            train_ids.pop(0)
-
-        with open(val_csv_path,'r') as folder_csv:
-            read_csv = csv.reader(folder_csv)
-            
-            for line in read_csv:
-                val_ids.append(line)
-            
-            # Removendo titulo colunas
-            val_ids.pop(0)
-        
         if model_name_train == "segmentacao":
-            segmentation_train(train_ids, val_ids)
+            segmentation_train(train_df, val_df)
         
         elif model_name_train == "segmentacao_Ensemble":
             model_path = os.getenv("MODEL_TRAIN_PATH")
-            segmentacao_ensemble(train_ids, val_ids, model_path)
+            segmentacao_ensemble(train_df, val_df, model_path)
         
 main()

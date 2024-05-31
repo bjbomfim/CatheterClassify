@@ -47,6 +47,7 @@ def train(train_ids, val_ids, return_train_path = None):
     image_size = (int(os.environ["IMAGE_SIZE"]), int(os.environ["IMAGE_SIZE"]))
     
     # Criando Modelo
+    print("Criando modelo")
     model = sm.Unet(backbone, classes=1, activation='sigmoid')
 
 
@@ -67,9 +68,9 @@ def train(train_ids, val_ids, return_train_path = None):
     )
 
     # Criando o DataGenerator para os dados de treino
+    print("Criando generator")
     train_generator = generator.DataGenerator(
         train_ids,
-        model,
         batch_size=batch_size,
         image_size=image_size,
         augment=True
@@ -77,7 +78,6 @@ def train(train_ids, val_ids, return_train_path = None):
     
     val_generator = generator.DataGenerator(
         val_ids,
-        model,
         batch_size=batch_size,
         image_size=image_size,
         augment=False
