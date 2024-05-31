@@ -31,7 +31,7 @@ class TubesRules(Enum):
         if length < 20:
             return 0
         # Caso a linha seje menor que 25 e esteja perto da borda entao pode ser considerado um tubo
-        elif length < 40:
+        elif length < 60:
             # Verificar se esta na borda da imagem
             white_pixels_indices = np.argwhere(binary_image == 255)
 
@@ -115,7 +115,7 @@ def salvar_csv(path, images_map):
 
 def count_pixels(name_img, path):
     img = cv2.imread(os.path.join(path, name_img), cv2.IMREAD_GRAYSCALE)
-    img = cv2.resize(img, (512, 512))
+    img = cv2.resize(img, (704, 704))
     
     if img is None:
         raise ValueError(f"Erro ao carregar a imagem {os.path.join(path, name_img)}")
@@ -123,7 +123,7 @@ def count_pixels(name_img, path):
     # Contar os pixels com valor 1
     pixel_count = cv2.countNonZero(img)
     
-    if pixel_count < 91:
+    if pixel_count < 172:
         return False
     return True
 
