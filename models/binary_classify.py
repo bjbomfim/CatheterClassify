@@ -128,7 +128,7 @@ def count_pixels(name_img, path):
     return True
 
 def predict_tube():
-    
+
     parser = argparse.ArgumentParser(description="BinaryClassify.")
     parser.add_argument("-pathImages", required=True, type=str)
     parser.add_argument("-type", required=True, type=str)
