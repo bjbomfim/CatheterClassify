@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 import csv
 
-from models.unet import build_custom_unet
+from .unet import build_custom_unet
 import segmentation_models as sm
 from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, CSVLogger, ModelCheckpoint, ReduceLROnPlateau
 from tensorflow.keras.models import load_model
