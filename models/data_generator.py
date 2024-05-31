@@ -27,8 +27,8 @@ class DataGenerator(Sequence):
                 ], p=0.5),
                 A.OneOf([
                     A.GaussNoise(var_limit=(10.0, 50.0)),
-                    A.GaussianBlur(blur_limit=3),
-                    A.MotionBlur(blur_limit=3),
+                    A.GaussianBlur(blur_limit=(3, 7)),  # Ajuste o blur_limit para um intervalo seguro
+                    A.MotionBlur(blur_limit=(3, 7)),    # Ajuste o blur_limit para um intervalo seguro
                 ], p=0.5),
                 A.CoarseDropout(max_holes=8, max_height=8, max_width=8, p=0.5),
             ])
@@ -233,8 +233,8 @@ class DataGeneratorClassifyTwoInputs(Sequence):
                 ], p=0.5),
                 A.OneOf([
                     A.GaussNoise(var_limit=(10.0, 50.0)),
-                    A.GaussianBlur(blur_limit=3),
-                    A.MotionBlur(blur_limit=3),
+                    A.GaussianBlur(blur_limit=(3, 7)),  # Ajuste o blur_limit para um intervalo seguro
+                    A.MotionBlur(blur_limit=(3, 7)),    # Ajuste o blur_limit para um intervalo seguro
                 ], p=0.5),
                 A.CoarseDropout(max_holes=8, max_height=8, max_width=8, p=0.5),
             ])
