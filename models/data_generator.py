@@ -142,9 +142,9 @@ class DataGeneratorRefinamento(Sequence):
             mask_path = data['Path_Mask']
             img = cv2.imread(img_path)
             mask = cv2.imread(mask_path)
-            predict = cv2.imread("/content/xrays/train_imagens/predict2", cv2.IMREAD_GRAYSCALE)
+            predict = cv2.imread("/content/xrays/train_imagens/predict2/"+data["ID"]+".jpg", cv2.IMREAD_GRAYSCALE)
             
-            if img is not None and mask is not None :
+            if img is not None and mask is not None and predict is not None:
                 img = self.resize_image(img)
                 mask = self.resize_image(mask)
                 predict = self.resize_image(predict)
