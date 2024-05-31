@@ -20,19 +20,25 @@ def build_custom_unet():
     # Concatenate inputs
     concatenated_inputs = concatenate([input1, input2])
     
-    # ResNet50 Encoder
-    base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=concatenated_inputs)
+    # Create a custom first layer to handle 6-channel input
+    custom_resnet = ResNet50(include_top=False, weights=None, input_tensor=concatenated_inputs)
+    x = custom_resnet.get_layer('conv1_conv').output
+    
+    # Load pretrained weights, skipping the first layer
+    pretrained_resnet = ResNet50(include_top=False, weights='imagenet')
+    for layer in pretrained_resnet.layers[2:]:
+        custom_resnet.get_layer(layer.name).set_weights(pretrained_resnet.get_layer(layer.name).get_weights())
     
     # Extract skip connections
     skip_connections = [
-        base_model.get_layer('conv1_relu').output,
-        base_model.get_layer('conv2_block3_out').output,
-        base_model.get_layer('conv3_block4_out').output,
-        base_model.get_layer('conv4_block6_out').output,
+        custom_resnet.get_layer('conv1_relu').output,
+        custom_resnet.get_layer('conv2_block3_out').output,
+        custom_resnet.get_layer('conv3_block4_out').output,
+        custom_resnet.get_layer('conv4_block6_out').output,
     ]
     
     # Bottom layer
-    encoder_output = base_model.get_layer('conv5_block3_out').output
+    encoder_output = custom_resnet.get_layer('conv5_block3_out').output
     
     # Build the UNet decoder
     decoder_output = unet_decoder(encoder_output, skip_connections)
@@ -44,3 +50,4 @@ def build_custom_unet():
     model = Model(inputs=[input1, input2], outputs=output)
     
     return model
+
