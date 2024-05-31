@@ -19,8 +19,8 @@ def build_custom_unet():
     input2 = Input(shape=(None, None, 3))
     
     # Concatenate inputs
-    concatenated_inputs = concatenate([input1, input2])
-    
+    concatenated_inputs = tf.keras.layers.Concatenate()([input1, input2])  # Usando Concatenate() em vez de concatenate()
+
     # Custom ResNet50 to handle 6-channel input
     base_model = ResNet50(include_top=False, weights=None, input_tensor=concatenated_inputs)
     
