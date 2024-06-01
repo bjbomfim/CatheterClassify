@@ -30,7 +30,7 @@ class DataGenerator(Sequence):
                 A.HorizontalFlip(p=0.5),
                 A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, rotate_limit=15, p=0.5),
                 A.GridDistortion(num_steps=5, distort_limit=0.03, p=0.5),
-                A.ElasticTransform(alpha=1, sigma=50, alpha_affine=50, p=0.5),
+                A.ElasticTransform(alpha=1, sigma=50, alpha_affine=50, p=0.15),  # Reduzido p para ElasticTransform
                 A.OneOf([
                     A.CLAHE(clip_limit=2),
                     A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2),
@@ -38,11 +38,12 @@ class DataGenerator(Sequence):
                 ], p=0.5),
                 A.OneOf([
                     A.GaussNoise(var_limit=(10.0, 50.0)),
-                    A.GaussianBlur(blur_limit=(3, 7)),  # Ajuste o blur_limit para um intervalo seguro
-                    A.MotionBlur(blur_limit=(3, 7)),    # Ajuste o blur_limit para um intervalo seguro
+                    A.GaussianBlur(blur_limit=(3, 5)),  # Ajustado blur_limit
+                    # Removido MotionBlur para simplificar
                 ], p=0.5),
                 A.CoarseDropout(max_holes=8, max_height=8, max_width=8, p=0.5),
             ])
+
 
     
     def __len__(self):
