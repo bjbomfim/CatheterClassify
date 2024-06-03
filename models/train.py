@@ -112,7 +112,7 @@ def train(train_ids, val_ids, return_train_path = None):
         verbose=1,
         initial_epoch=previous_epoch_number)
 
-def train_with_ensemble(train_ids, val_ids, pretrained_model_path=None, return_train_path=None):
+def train_with_ensemble(train_ids, val_ids, pretrained_model_path="/content/drive/MyDrive/Colab Notebooks/CatheterClassify/trainresults/resnet50_2024_06_01_23_05_48_PM/UltimoTreino/best_segmentation_model.h5", return_train_path=None):
     sm.set_framework('tf.keras')
     sm.framework()
 
