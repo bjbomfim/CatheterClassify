@@ -164,20 +164,14 @@ class DataGeneratorRefinamento(Sequence):
 
 
 class DataGeneratorClassify(Sequence):
-    def __init__(self, dataframe, batch_size=4, image_size=(384, 384), shuffle=True):
+    def __init__(self, dataframe, batch_size=4, image_size=(384, 384)):
         self.dataframe = dataframe
         self.batch_size = batch_size
         self.image_size = image_size
-        self.shuffle = shuffle
         self.indexes = np.arange(len(self.dataframe))
-        self.on_epoch_end()
 
     def __len__(self):
         return int(np.ceil(len(self.dataframe) / self.batch_size))
-
-    def on_epoch_end(self):
-        if self.shuffle:
-            np.random.shuffle(self.indexes)
 
     def __getitem__(self, index):
         indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]

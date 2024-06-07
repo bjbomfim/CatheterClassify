@@ -1,11 +1,18 @@
 from datetime import datetime
 import os
+import numpy as np
 import pandas as pd
 from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint, CSVLogger, ReduceLROnPlateau
 from tensorflow.keras import optimizers
 from tensorflow.keras.metrics import AUC, Precision, Recall
 from .data_generator import DataGeneratorClassify, DataGeneratorClassifyTwoInputs
 from .classify_model import build_classification_model, build_classification_model2
+
+def calculate_class_weights(labels):
+    total_samples = len(labels)
+    class_counts = np.sum(labels, axis=0)
+    class_weights = total_samples / (len(class_counts) * class_counts)
+    return class_weights
 
 def train(train_df, val_df, multi_input = False):
     # Criação do diretório de logs
@@ -25,8 +32,14 @@ def train(train_df, val_df, multi_input = False):
     train_generator = DataGeneratorClassify(train_df, batch_size=batch_size, image_size=image_size)
     val_generator = DataGeneratorClassify(val_df, batch_size=batch_size, image_size=image_size)
     if multi_input:
-        train_generator = DataGeneratorClassifyTwoInputs(train_df, batch_size=batch_size, image_size=image_size)
+        train_generator = DataGeneratorClassifyTwoInputs(train_df, batch_size=batch_size, image_size=image_size, augment=True)
         val_generator = DataGeneratorClassifyTwoInputs(val_df, batch_size=batch_size, image_size=image_size)
+    
+    labels = train_df[['CVC - Normal', 'CVC - Borderline', 'CVC - Abnormal']].values
+    class_weights = calculate_class_weights(labels)
+    print("Pesos das Classes:", class_weights)
+    
+    class_weight_dict = {i: class_weights[i] for i in range(len(class_weights))}
     
     # Construção do modelo
     input_shape = (image_size[0], image_size[1], 3)
@@ -58,6 +71,7 @@ def train(train_df, val_df, multi_input = False):
         validation_data=val_generator,
         validation_steps=len(val_generator),
         epochs=epochs,
+        class_weight=class_weight_dict,
         callbacks=callbacks,
         shuffle=True,
         verbose=1
