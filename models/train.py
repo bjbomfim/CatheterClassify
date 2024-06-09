@@ -8,7 +8,7 @@ from tensorflow.keras.models import load_model
 
 from . import data_generator as generator
 from .CustomCallbacks import layer_trainable as LayerTrainable
-from tensorflow.keras.losses import BinaryCrossentropy
+
 
 import tensorflow as tf
 
@@ -48,7 +48,7 @@ def train(train_ids, val_ids, return_train_path = None):
     image_size = (int(os.environ["IMAGE_SIZE"]), int(os.environ["IMAGE_SIZE"]))
     
     # Criando Modelo
-    model = sm.Unet(backbone, classes=1, activation=None)
+    model = sm.Unet(backbone, classes=1, activation='sigmoid')
 
 
     # Verificando se irá retomar o treinamento
@@ -63,7 +63,7 @@ def train(train_ids, val_ids, return_train_path = None):
     
     model.compile(
         'Adam',
-        loss=BinaryCrossentropy(from_logits=True),
+        loss=dice_loss,
         metrics=[intersection_over_union, sm.metrics.f1_score, sm.metrics.precision , sm.metrics.recall],
     )
 
