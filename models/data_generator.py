@@ -66,7 +66,7 @@ class DataGenerator(Sequence):
         for idx in indexes:
             # Load image
             img = cv2.imread(idx[2])
-            mask = cv2.imread(os.path.join("/content/mask_imagens/CVC", idx[0]+'.jpg'))
+            mask = cv2.imread(os.path.join("/content/mask_imagens", idx[0]+'.jpg'))
             if img is not None and mask is not None :
                 img = self.resize_image(img)
                 mask = self.resize_image(mask)
