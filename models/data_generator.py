@@ -30,7 +30,7 @@ class DataGenerator(Sequence):
                 A.HorizontalFlip(p=0.5),
                 A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, rotate_limit=15, p=0.5),
                 A.GridDistortion(num_steps=5, distort_limit=0.03, p=0.5),
-                A.ElasticTransform(alpha=1, sigma=50, alpha_affine=50, p=0.15),
+                A.ElasticTransform(alpha=1, sigma=50, alpha_affine=50, p=0.10),
                 A.OneOf([
                     A.CLAHE(clip_limit=2),
                     A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2),
@@ -66,7 +66,7 @@ class DataGenerator(Sequence):
         for idx in indexes:
             # Load image
             img = cv2.imread(idx[2])
-            mask = cv2.imread(idx[3])
+            mask = cv2.imread(os.path.join("/content/mask_imagens/CVC", idx[0]+'.jpg'))
             if img is not None and mask is not None :
                 img = self.resize_image(img)
                 mask = self.resize_image(mask)
