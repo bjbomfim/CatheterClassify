@@ -48,7 +48,7 @@ def train(train_ids, val_ids, return_train_path = None):
     image_size = (int(os.environ["IMAGE_SIZE"]), int(os.environ["IMAGE_SIZE"]))
     
     # Criando Modelo
-    model = sm.Unet(backbone, classes=1, activation='sigmoid')
+    model = sm.Unet(backbone, classes=1, activation=None)
 
 
     # Verificando se irá retomar o treinamento
