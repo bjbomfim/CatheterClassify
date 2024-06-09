@@ -8,6 +8,7 @@ from tensorflow.keras.models import load_model
 
 from . import data_generator as generator
 from .CustomCallbacks import layer_trainable as LayerTrainable
+from tensorflow.keras.losses import BinaryCrossentropy
 
 import tensorflow as tf
 
@@ -62,7 +63,7 @@ def train(train_ids, val_ids, return_train_path = None):
     
     model.compile(
         'Adam',
-        loss=dice_loss,
+        loss=BinaryCrossentropy(from_logits=True),
         metrics=[intersection_over_union, sm.metrics.f1_score, sm.metrics.precision , sm.metrics.recall],
     )
 
