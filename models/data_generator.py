@@ -30,7 +30,7 @@ class DataGenerator(Sequence):
                 A.HorizontalFlip(p=0.5),
                 A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, rotate_limit=15, p=0.5),
                 A.GridDistortion(num_steps=5, distort_limit=0.03, p=0.5),
-                A.ElasticTransform(alpha=1, sigma=50, alpha_affine=50, p=0.25),
+                A.ElasticTransform(alpha=1, sigma=50, alpha_affine=50, p=0.15),
                 A.OneOf([
                     A.CLAHE(clip_limit=2),
                     A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2),
