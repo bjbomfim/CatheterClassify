@@ -123,7 +123,7 @@ def count_pixels(name_img, path):
     # Contar os pixels com valor 1
     pixel_count = cv2.countNonZero(img)
     
-    if pixel_count < 300:
+    if pixel_count < 400:
         return False
     return True
 
