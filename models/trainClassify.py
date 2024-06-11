@@ -46,8 +46,8 @@ def train(train_df, val_df, multi_input = False):
     model = build_classification_model(input_shape)
     
     if multi_input:
-        image_shape = (image_size[0], image_size[1], 3)
-        model = build_classification_model2(image_shape, input_shape)
+        image_shape = (image_size[0], image_size[1], 6)
+        model = build_classification_model2(image_shape)
 
     model.compile(
         optimizer=optimizers.Adam(learning_rate=1e-4),

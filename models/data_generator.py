@@ -139,7 +139,7 @@ class DataGeneratorClassifyTwoInputs(Sequence):
                 A.HorizontalFlip(p=0.5),
                 A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, rotate_limit=15, p=0.5),
                 A.GridDistortion(num_steps=5, distort_limit=0.03, p=0.5),
-                A.ElasticTransform(alpha=1, sigma=50, alpha_affine=50, p=0.25),
+                A.ElasticTransform(alpha=1, sigma=50, alpha_affine=50, p=0.15),
                 A.OneOf([
                     A.CLAHE(clip_limit=2),
                     A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2),
@@ -164,7 +164,6 @@ class DataGeneratorClassifyTwoInputs(Sequence):
         batch_data = [self.dataframe.iloc[k] for k in indexes]
 
         X_images = []
-        X_masks = []
         y = []
 
         for data in batch_data:
@@ -189,12 +188,13 @@ class DataGeneratorClassifyTwoInputs(Sequence):
             img = img / 255.0
             mask = np.expand_dims(mask, axis=-1)
 
-            X_images.append(img)
-            X_masks.append(mask)
+            combined_data = np.concatenate([img, mask], axis=-1)
+            
+            X_images.append(combined_data)
+
             y.append(labels.astype(np.float32))
 
         X_images = np.array(X_images)
-        X_masks = np.array(X_masks)
         y = np.array(y)
 
-        return [X_images, X_masks], y
+        return X_images, y
