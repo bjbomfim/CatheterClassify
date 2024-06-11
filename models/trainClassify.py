@@ -29,11 +29,11 @@ def train(train_df, val_df, multi_input = True):
     training_log_path = os.path.join(log_dir, 'training_log.csv')
 
     # Criação dos DataGenerators
-    train_generator = DataGeneratorClassify(train_df, batch_size=batch_size, image_size=image_size)
-    val_generator = DataGeneratorClassify(val_df, batch_size=batch_size, image_size=image_size)
-    if multi_input:
-        train_generator = DataGeneratorClassifyTwoInputs(train_df, batch_size=batch_size, image_size=image_size, augment=True)
-        val_generator = DataGeneratorClassifyTwoInputs(val_df, batch_size=batch_size, image_size=image_size)
+    # train_generator = DataGeneratorClassify(train_df, batch_size=batch_size, image_size=image_size)
+    # val_generator = DataGeneratorClassify(val_df, batch_size=batch_size, image_size=image_size)
+    # if multi_input:
+    train_generator = DataGeneratorClassifyTwoInputs(train_df, batch_size=batch_size, image_size=image_size, augment=True)
+    val_generator = DataGeneratorClassifyTwoInputs(val_df, batch_size=batch_size, image_size=image_size)
     
     labels = train_df[['CVC - Normal', 'CVC - Borderline', 'CVC - Abnormal']].values
     class_weights = calculate_class_weights(labels)
@@ -43,11 +43,11 @@ def train(train_df, val_df, multi_input = True):
     
     # Construção do modelo
     input_shape = (image_size[0], image_size[1], 3)
-    model = build_classification_model(input_shape)
+    # model = build_classification_model(input_shape)
     
     if multi_input:
-        image_shape = (image_size[0], image_size[1], 6)
-        model = build_classification_model2(image_shape)
+        input_shape = (image_size[0], image_size[1], 6)
+    model = build_classification_model2(input_shape)
 
     model.compile(
         optimizer=optimizers.Adam(learning_rate=1e-4),
