@@ -14,7 +14,7 @@ def calculate_class_weights(labels):
     class_weights = total_samples / (len(class_counts) * class_counts)
     return class_weights
 
-def train(train_df, val_df, multi_input = False):
+def train(train_df, val_df, multi_input = True):
     # Criação do diretório de logs
     current_time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%p")
     log_dir = os.path.join(os.environ["RESULT_TRAIN_PATH"], current_time)
