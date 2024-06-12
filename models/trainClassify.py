@@ -7,6 +7,8 @@ from tensorflow.keras import optimizers
 from tensorflow.keras.metrics import AUC, Precision, Recall
 from .data_generator import DataGeneratorClassify, DataGeneratorClassifyTwoInputs
 from .classify_model import build_classification_model, build_classification_model2
+from tensorflow.keras.optimizers import AdamW
+
 
 def calculate_class_weights(labels):
     total_samples = len(labels)
@@ -14,7 +16,7 @@ def calculate_class_weights(labels):
     class_weights = total_samples / (len(class_counts) * class_counts)
     return class_weights
 
-def train(train_df, val_df, multi_input = True):
+def train(train_df, val_df):
     # Criação do diretório de logs
     current_time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%p")
     log_dir = os.path.join(os.environ["RESULT_TRAIN_PATH"], current_time)
@@ -28,10 +30,6 @@ def train(train_df, val_df, multi_input = True):
     best_model_path = os.path.join(log_dir, 'best_classification_model.h5')
     training_log_path = os.path.join(log_dir, 'training_log.csv')
 
-    # Criação dos DataGenerators
-    # train_generator = DataGeneratorClassify(train_df, batch_size=batch_size, image_size=image_size)
-    # val_generator = DataGeneratorClassify(val_df, batch_size=batch_size, image_size=image_size)
-    # if multi_input:
     train_generator = DataGeneratorClassifyTwoInputs(train_df, batch_size=batch_size, image_size=image_size, augment=True)
     val_generator = DataGeneratorClassifyTwoInputs(val_df, batch_size=batch_size, image_size=image_size)
     
@@ -42,16 +40,14 @@ def train(train_df, val_df, multi_input = True):
     class_weight_dict = {i: class_weights[i] for i in range(len(class_weights))}
     
     # Construção do modelo
-    input_shape = (image_size[0], image_size[1], 3)
-    # model = build_classification_model(input_shape)
-    
-    if multi_input:
-        input_shape = (image_size[0], image_size[1], 6)
+    input_shape = (image_size[0], image_size[1], 2)
     model = build_classification_model2(input_shape)
 
+    optimizer = AdamW(learning_rate=1e-5, weight_decay=0.1)
+    
     model.compile(
-        optimizer=optimizers.Adam(learning_rate=1e-4),
-        loss='binary_crossentropy',
+        optimizer=optimizer,
+        loss='categorical_crossentropy',
         metrics=['accuracy', AUC(name='auc'), Precision(name='precision'), Recall(name='recall')]
     )
 

@@ -172,12 +172,11 @@ class DataGeneratorClassifyTwoInputs(Sequence):
             labels = data[['CVC - Normal', 'CVC - Borderline', 'CVC - Abnormal']].values
 
             # Carregar imagem de raio-X
-            img = cv2.imread(img_path)
+            img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
             img = cv2.resize(img, (self.image_size[1], self.image_size[0]))
 
             # Carregar máscara de segmentação
             mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
-            mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
             mask = cv2.resize(mask, (self.image_size[1], self.image_size[0]))
             
             if self.augment:
@@ -186,9 +185,9 @@ class DataGeneratorClassifyTwoInputs(Sequence):
                 mask = augmented['mask']
             
             mask = mask.astype(np.float32) / 255.0
-            img = img / 255.0
+            img = img.astype(np.float32) / 255.0
 
-            combined_data = np.concatenate([img, mask], axis=-1)
+            combined_data = np.stack([img, mask, mask], axis=-1)
             
             X_images.append(combined_data)
 

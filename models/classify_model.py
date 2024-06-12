@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models, optimizers
 from tensorflow.keras.layers import Input, Conv2D
+from classification_models.keras import Classifiers
 
 def build_classification_model(input_shape):
 
@@ -24,28 +25,17 @@ def build_classification_model(input_shape):
     return model
 
 def build_classification_model2(image_shape):
-    image_input = Input(shape=(image_shape[0], image_shape[1], 6), name='image_input')
+    image_input = (image_shape[0], image_shape[1], 2)
+    
+    InceptionResnetV2, preprocess_input = Classifiers.get('inceptionresnetv2')
+    
+    base_model = InceptionResnetV2(input_shape=image_input, weights='imagenet', include_top=False)
 
-    x = layers.Conv2D(3, (3, 3), padding='same', activation='relu')(image_input)
-    x = layers.BatchNormalization()(x)
-    x = layers.MaxPooling2D((2, 2))(x)
-
-    base_model = tf.keras.applications.EfficientNetB4(
-        weights='imagenet',
-        include_top=False,
-        input_shape=(image_shape[0] // 2, image_shape[1] // 2, 3)
-    )
-
-    x = base_model(x)
-
-    x = layers.GlobalAveragePooling2D()(x)
+    x = layers.GlobalAveragePooling2D()(base_model.output)
     x = layers.Dense(1024, activation='relu')(x)
     x = layers.Dropout(0.5)(x)
-    predictions = layers.Dense(3, activation='sigmoid')(x)
+    outputs = layers.Dense(3, activation='sigmoid')(x)
 
-    model = models.Model(inputs=image_input, outputs=predictions)
-
-    for layer in base_model.layers:
-        layer.trainable = True
+    model = models.Model(inputs=base_model.input, outputs=outputs)
 
     return model

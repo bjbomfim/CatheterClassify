@@ -25,8 +25,8 @@ map_id = {tube_position1: [], tube_position2: [], tube_position3: [], tube_posit
 
 map_csv = {}
 
-path_csv_read = '/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/labels/train.csv'
-path_csv_write = '/content/drive/MyDrive/Colab Notebooks/CatheterClassify/data/labels/'
+path_csv_read = 'labels.csv'
+path_csv_write = ''
 
 path_csv_train = 'train_classify.csv'
 path_csv_test = 'test_classify.csv'
@@ -71,38 +71,33 @@ print(f"Qtd separados tubo 3Tipos: {len(map_id['3Tipos'])}")
 print("----------------------------------------------------------------")
         
         
-def cvcGeraLista(lista, trainList, testList, valiList):
+def cvcGeraLista(lista, trainList, testList):
     random.shuffle(lista)
-    trainList.extend(lista[:int(len(lista)*0.6)])
-    temp = lista[int(len(lista)*0.6):]
+    trainList.extend(lista[:int(len(lista)*0.8)])
+    temp = lista[int(len(lista)*0.8):]
     
     random.shuffle(temp)
-    testList.extend(temp[int(len(temp)*0.5):])
-    valiList.extend(temp[:int(len(temp)*0.5)])
-    return trainList, testList, valiList
+    testList.extend(temp)
+    return trainList, testList
 
 list_ids_train = []
 list_ids_test = []
-list_ids_validation = []
 
 random.shuffle(map_id[tube_position1])
 random.shuffle(map_id[tube_position2])
 random.shuffle(map_id[tube_position3])
 random.shuffle(map_id['2Tipos'])
 
-list_ids_train, list_ids_test, list_ids_validation, cvcGeraLista(map_id[tube_position1][0:5000], list_ids_train, list_ids_test, list_ids_validation)
-list_ids_train, list_ids_test, list_ids_validation, cvcGeraLista(map_id[tube_position2][0:5000], list_ids_train, list_ids_test, list_ids_validation)
-list_ids_train, list_ids_test, list_ids_validation, cvcGeraLista(map_id[tube_position3][0:2156], list_ids_train, list_ids_test, list_ids_validation)
-list_ids_train, list_ids_test, list_ids_validation, cvcGeraLista(map_id['3Tipos'][0:71], list_ids_train, list_ids_test, list_ids_validation)
-list_ids_train, list_ids_test, list_ids_validation, cvcGeraLista(map_id['2Tipos'][0:2300], list_ids_train, list_ids_test, list_ids_validation)
-list_ids_train, list_ids_test, list_ids_validation, cvcGeraLista(listaTubo2, list_ids_train, list_ids_test, list_ids_validation)
+list_ids_train, list_ids_test = cvcGeraLista(map_id[tube_position1][0:5000], list_ids_train, list_ids_test)
+list_ids_train, list_ids_test = cvcGeraLista(map_id[tube_position2][0:5000], list_ids_train, list_ids_test)
+list_ids_train, list_ids_test = cvcGeraLista(map_id[tube_position3][0:2156], list_ids_train, list_ids_test)
+# list_ids_train, list_ids_test = cvcGeraLista(map_id['3Tipos'][0:71], list_ids_train, list_ids_test)
+# list_ids_train, list_ids_test = cvcGeraLista(map_id['2Tipos'][0:2300], list_ids_train, list_ids_test)
+# list_ids_train, list_ids_test = cvcGeraLista(listaTubo2, list_ids_train, list_ids_test)
 
 
-print(f"Lista treino {len(list_ids_train)}, lista teste {len(list_ids_test)}, lista validacao {len(list_ids_validation)}")
+print(f"Lista treino {len(list_ids_train)}, lista teste {len(list_ids_test)}")
 print("Iniciando train Csv")
 generate_csv(path_csv_write+path_csv_train, tube_position1, tube_position2, tube_position3, list_ids_train, map_csv)
 print("Iniciando test Csv")
 generate_csv(path_csv_write+path_csv_test, tube_position1, tube_position2, tube_position3, list_ids_test, map_csv)
-print("Iniciando validation Csv")
-generate_csv(path_csv_write+path_csv_validation, tube_position1, tube_position2, tube_position3, list_ids_validation, map_csv)
-
