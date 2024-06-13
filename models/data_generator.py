@@ -188,7 +188,9 @@ class DataGeneratorClassifyTwoInputs(Sequence):
             mask = mask.astype(np.float32) / 255.0
             img = img.astype(np.float32) / 255.0
 
-            combined_data = np.stack([img, mask, mask], axis=-1)
+            combined_data = np.zeros((704, 704, 3), dtype=np.float32)
+            combined_data[:, :, 0] = img
+            combined_data[:, :, 1] = mask
             
             X_images.append(combined_data)
 
