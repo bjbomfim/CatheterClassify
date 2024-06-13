@@ -40,7 +40,7 @@ def train(train_df, val_df):
     class_weight_dict = {i: class_weights[i] for i in range(len(class_weights))}
     
     # Construção do modelo
-    input_shape = (image_size[0], image_size[1], 2)
+    input_shape = (image_size[0], image_size[1], 3)
     model = build_classification_model2(input_shape)
 
     optimizer = AdamW(learning_rate=1e-5, weight_decay=0.1)

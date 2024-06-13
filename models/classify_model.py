@@ -25,7 +25,7 @@ def build_classification_model(input_shape):
     return model
 
 def build_classification_model2(image_shape):
-    image_input = (image_shape[0], image_shape[1], 2)
+    image_input = (image_shape[0], image_shape[1], 3)
     
     InceptionResnetV2, preprocess_input = Classifiers.get('inceptionresnetv2')
     
