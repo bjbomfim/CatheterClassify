@@ -37,9 +37,9 @@ class DataGenerator(Sequence):
                     A.HueSaturationValue(hue_shift_limit=20, sat_shift_limit=30, val_shift_limit=20)
                 ], p=0.5),
                 A.OneOf([
-                    A.GaussNoise(var_limit=(10.0, 50.0)),
+                    A.GaussNoise(var_limit=(5.0, 10.0)),
                     A.GaussianBlur(blur_limit=(3, 5)),
-                ], p=0.5),
+                ], p=0.05),
                 A.CoarseDropout(max_holes=8, max_height=8, max_width=8, p=0.5),
             ])
 
@@ -146,9 +146,9 @@ class DataGeneratorClassifyTwoInputs(Sequence):
                     A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
                 ], p=0.5),
                 A.OneOf([
-                    A.GaussNoise(var_limit=(10.0, 50.0), p=0.5),
+                    A.GaussNoise(var_limit=(5.0, 10.0), p=0.5),
                     A.GaussianBlur(blur_limit=(3, 5), p=0.5),
-                ], p=0.5),
+                ], p=0.05),
                 A.CoarseDropout(max_holes=8, max_height=8, max_width=8, p=0.5),
             ])
 
